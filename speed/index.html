@@ -1,0 +1,142 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Test Online Free (Ping, Download, Upload) | Thumbnail Generator Tools</title>
+    <meta name="description" content="Check your internet speed online with a modern animated test for ping, download, and upload speed.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-speed.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        /* Keep theme toggle aligned with light-mode palette */
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Internet Speed Check</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+        <p class="subtitle">Run a modern animated speed test for ping, download, and upload in one click.</p>
+
+        <section class="card speed-card">
+            <div class="speed-hero">
+                <div class="speed-display">
+                    <p id="speedPhase" class="speed-phase">Ready</p>
+                    <p id="speedLive" class="speed-live">0.00</p>
+                    <p class="speed-unit">Mbps</p>
+                    <div class="speed-track" aria-hidden="true">
+                        <span id="speedNeedle" class="speed-needle"></span>
+                    </div>
+                </div>
+                <div class="speed-wave" aria-hidden="true">
+                    <span class="wave-col w1"></span>
+                    <span class="wave-col w2"></span>
+                    <span class="wave-col w3"></span>
+                    <span class="wave-col w4"></span>
+                    <span class="wave-col w5"></span>
+                    <span class="wave-col w6"></span>
+                    <span class="wave-col w7"></span>
+                    <span class="wave-col w8"></span>
+                    <span class="wave-col w9"></span>
+                    <span class="wave-col w10"></span>
+                    <span class="wave-col w11"></span>
+                    <span class="wave-col w12"></span>
+                </div>
+            </div>
+
+            <div class="speed-settings">
+                <div>
+                    <label>Test Mode</label>
+                    <div id="speedModeButtons" class="mode-buttons" role="tablist" aria-label="Speed test mode">
+                        <button type="button" class="mode-btn" data-mode="fast">Fast 15-25s</button>
+                        <button type="button" class="mode-btn is-active" data-mode="medium">Medium 25-45s</button>
+                        <button type="button" class="mode-btn" data-mode="slow">Slow 45-80s</button>
+                    </div>
+                </div>
+            </div>
+            <p id="speedModeDetail" class="note speed-mode-detail">Balanced mode for daily use. Good mix of speed and accuracy.</p>
+            <p id="speedModeUsage" class="note speed-mode-detail">Approx data usage: --</p>
+
+            <div class="convert-grid speed-results">
+                <div>
+                    <label for="downloadResult">Download</label>
+                    <input id="downloadResult" type="text" readonly placeholder="-- Mbps">
+                </div>
+                <div>
+                    <label for="uploadResult">Upload</label>
+                    <input id="uploadResult" type="text" readonly placeholder="-- Mbps">
+                </div>
+                <div>
+                    <label for="pingResult">Ping</label>
+                    <input id="pingResult" type="text" readonly placeholder="-- ms">
+                </div>
+                <div>
+                    <label for="jitterResult">Jitter</label>
+                    <input id="jitterResult" type="text" readonly placeholder="-- ms">
+                </div>
+            </div>
+
+            <div class="convert-actions">
+                <button id="startSpeedBtn" type="button">Start Speed Test</button>
+                <button id="copySpeedBtn" type="button" class="download-btn">Copy Results</button>
+            </div>
+            <p id="speedStatus" class="status" aria-live="polite"></p>
+            <p id="speedDataUsed" class="speed-data-used" aria-live="polite">Data used this test: --</p>
+            <p id="speedContext" class="speed-context" aria-live="polite">Connection: Detecting... | Provider: Detecting...</p>
+        </section>
+
+        <section class="faq-section">
+            <h2>Speed Test FAQ, Tips and How To Use</h2>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>How do I use this internet speed checker?</summary>
+                    <p>Select a mode button (Fast, Medium, Slow), wait for auto-detection of your connection and provider, then click Start Speed Test or press Enter. Wait until status shows completed.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Which mode should I choose?</summary>
+                    <p>Use Fast for quick checks, Medium for balanced results, and Slow for higher accuracy. Slow mode runs more samples and usually gives more stable numbers.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How can I get more accurate results?</summary>
+                    <p>Pause downloads, close streaming/apps, keep one device active, stay near Wi-Fi router, and run 2 to 3 tests. Use Slow mode for final comparison between providers.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How are provider and connection type detected?</summary>
+                    <p>Connection type is read from browser network APIs and provider is estimated from your public IP network data. Some VPN, proxy, privacy DNS, or browser restrictions may show Unknown.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../speed.js"></script>
+</body>
+</html>
+

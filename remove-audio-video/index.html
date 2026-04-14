@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Audio from Video Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Remove or mute audio tracks from video files online while preserving video quality.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-remove-audio-video.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow: inset 0 1px 2px rgba(0,0,0,.2); }
+        body:not(.dark-mode) .theme-thumb { background: linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
+        .tool-video-preview { width:100%; aspect-ratio:16/9; border-radius:10px; border:1px solid #7ea7d8; background:#0b1a2d; object-fit:contain; }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Remove Audio from Video</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Upload a video, remove its audio stream, and download a clean silent output.</p>
+
+        <section class="card">
+            <input id="ravFile" class="sr-only-input" type="file" accept="video/*">
+            <div id="ravDrop" class="drop-zone" role="button" tabindex="0" aria-label="Load video by click or drag and drop">
+                <p class="drop-title">Drag and drop video here</p>
+                <p class="drop-subtitle">or click to choose file</p>
+            </div>
+
+            <div id="ravPreviewWrap" class="audio-preview hidden" style="margin-top:12px;">
+                <h3 class="preview-title">Preview</h3>
+                <video id="ravPreview" class="tool-video-preview" controls></video>
+                <div class="convert-actions" style="margin-top:12px;">
+                    <button id="ravConvertBtn" type="button">Remove Audio</button>
+                    <button id="ravDownloadBtn" type="button" class="download-btn hidden">Download Silent Video</button>
+                </div>
+            </div>
+            <p id="ravStatus" class="status" aria-live="polite">Load a video to start.</p>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../media-ffmpeg.js"></script>
+    <script src="../remove-audio-video.js"></script>
+</body>
+</html>
+

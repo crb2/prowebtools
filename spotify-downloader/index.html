@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Downloader Link Assistant | Thumbnail Generator Tools</title>
+    <meta name="description" content="Parse Spotify links, open quickly in app/web, and follow legal offline listening guidance.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-spotify-downloader.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg,#fff 0%,#e8edf4 100%);
+        }
+
+        .sp-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .sp-box {
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,.45);
+        }
+
+        [data-theme="dark"] .sp-box {
+            background: rgba(8,22,42,.55);
+            border-color: #3f618c;
+        }
+
+        #spEmbedWrap iframe {
+            width: 100%;
+            min-height: 352px;
+            border: 0;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 780px) {
+            .sp-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Spotify Downloader</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Paste a Spotify URL/URI to extract ID, open quickly, and manage legal offline listening.</p>
+
+        <section class="card">
+            <label for="spInput">Spotify URL or URI</label>
+            <div class="input-row">
+                <input id="spInput" type="text" placeholder="https://open.spotify.com/track/... or spotify:track:..." autocomplete="off">
+                <button id="spParseBtn" type="button">Analyze</button>
+            </div>
+
+            <div class="convert-actions" style="margin-top:12px;">
+                <button id="spOpenWebBtn" type="button" class="download-btn" disabled>Open in Web Player</button>
+                <button id="spOpenAppBtn" type="button" class="download-btn" disabled>Open in Spotify App</button>
+                <button id="spCopyUriBtn" type="button" class="download-btn" disabled>Copy URI</button>
+                <button id="spCopyIdBtn" type="button" class="download-btn" disabled>Copy ID</button>
+            </div>
+
+            <p id="spStatus" class="status" aria-live="polite">Paste a Spotify link to begin.</p>
+
+            <div class="sp-grid">
+                <div class="sp-box">
+                    <p class="note" style="margin:0;">Type</p>
+                    <p id="spType" class="status" style="margin:6px 0 0;">--</p>
+                </div>
+                <div class="sp-box">
+                    <p class="note" style="margin:0;">ID</p>
+                    <p id="spId" class="status" style="margin:6px 0 0;">--</p>
+                </div>
+            </div>
+
+            <div id="spEmbedWrap" class="sp-box hidden" style="margin-top:12px;"></div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Legal Offline Listening</h2>
+            <div class="faq-list">
+                <details class="faq-item" open>
+                    <summary>How can I listen offline legally?</summary>
+                    <p>Use Spotify Premium and tap Download on your own saved playlists/albums inside the official Spotify app.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Does this page bypass Spotify protection?</summary>
+                    <p>No. This assistant only parses links and opens official Spotify destinations.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../spotify-downloader.js"></script>
+</body>
+</html>
+

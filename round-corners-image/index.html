@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round Corners Image Tool Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Apply rounded corners to images with precise radius controls.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-round-corners-image.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow: inset 0 1px 2px rgba(0,0,0,.2); }
+        body:not(.dark-mode) .theme-thumb { background: linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
+        #rciPreviewWrap { display:flex; justify-content:center; align-items:center; width:fit-content; max-width:100%; min-height:0; max-height:72vh; margin-inline:auto; padding:0; background: repeating-conic-gradient(#f6fbff 0% 25%, #d9e9ff 0% 50%) 50% / 18px 18px; border:0; border-radius:0; line-height:0; overflow:auto; }
+        #rciPreviewWrap.bg-solid { background: #0a0a0a; }
+        #rciPreviewWrap.bg-light { background: #ffffff; }
+        #rciPreviewCanvas { width:auto; height:auto; max-width:100%; max-height:70vh; border:0; border-radius:0; background: transparent; }
+        .rci-controls-row { display:grid; grid-template-columns: minmax(0, 1fr) 96px; gap:10px; margin-top:6px; align-items:stretch; }
+        .rci-controls-row .control-cell { min-width:0; }
+        .rci-controls-row .control-cell label { margin-bottom:6px; display:block; white-space:nowrap; }
+        .rci-controls-row input[type="range"] { width:100%; }
+        .rci-number-wrap {
+            position: relative;
+        }
+        .rci-controls-row input[type="number"] {
+            width:100%;
+            text-align:center;
+            padding:8px 34px 8px 10px;
+            font-weight:700;
+            letter-spacing:.02em;
+            border-radius:12px;
+            border:1px solid #8fb3d8;
+            background: linear-gradient(180deg, #f8fcff 0%, #dceeff 100%);
+            color:#1a4d7d;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.9),
+                0 3px 10px rgba(31, 89, 155, .2);
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        .rci-controls-row input[type="number"]::-webkit-outer-spin-button,
+        .rci-controls-row input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .rci-controls-row input[type="number"]:focus {
+            border-color:#4f95e4;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.95),
+                0 0 0 3px rgba(79, 149, 228, .24),
+                0 4px 12px rgba(31, 89, 155, .26);
+        }
+        .rci-stepper {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 3px;
+        }
+        .rci-step-btn {
+            height: 13px;
+            padding: 0;
+            border-radius: 6px;
+            border: 1px solid #8bb5e1;
+            background: linear-gradient(180deg, #f7fbff 0%, #dfedff 100%);
+            color: #245381;
+            font-size: 9px;
+            line-height: 1;
+            text-shadow: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.92);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rci-step-btn:hover { filter: brightness(1.08); }
+        .rci-step-btn:active { transform: translateY(1px); }
+        .rci-bg-inline {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            column-gap: 8px;
+            row-gap: 6px;
+            min-width: min(100%, 520px);
+            margin-left: auto;
+            position: relative;
+        }
+        .rci-bg-label {
+            margin: 0;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #1c4c7b;
+            white-space: nowrap;
+        }
+        .rci-bg-palette {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 2px;
+            scrollbar-width: thin;
+            justify-content: flex-start;
+        }
+        .rci-bg-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.95);
+            box-shadow:
+                0 0 0 1px rgba(40, 84, 136, 0.45),
+                0 3px 8px rgba(8, 24, 47, 0.25);
+            cursor: pointer;
+            flex: 0 0 auto;
+            position: relative;
+            background: var(--swatch-color, #000000);
+        }
+        .rci-bg-swatch:hover { transform: translateY(-1px); }
+        .rci-bg-swatch.is-active {
+            box-shadow:
+                0 0 0 2px #4f95e4,
+                0 0 0 4px rgba(79, 149, 228, 0.25),
+                0 3px 8px rgba(8, 24, 47, 0.25);
+        }
+        .rci-bg-swatch.transparent {
+            background: repeating-conic-gradient(#ffffff 0% 25%, #d6dbe4 0% 50%) 50% / 10px 10px;
+        }
+        .rci-bg-swatch.custom {
+            background: conic-gradient(#ef4444, #f97316, #facc15, #22c55e, #3b82f6, #8b5cf6, #ec4899, #ef4444);
+        }
+        .rci-bg-swatch.custom::after {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+            background: var(--custom-core, #ffffff);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+        .rci-color-pop {
+            position: static;
+            width: clamp(150px, 22vw, 180px);
+            max-width: min(100%, 180px);
+            margin-top: 2px;
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid #86afd8;
+            background: linear-gradient(180deg, #ffffff 0%, #e9f3ff 100%);
+            box-shadow: 0 8px 18px rgba(32, 92, 165, 0.2);
+            grid-column: 1 / -1;
+            justify-self: end;
+        }
+        .rci-actions {
+            align-items: flex-start;
+        }
+        .rci-left-stack {
+            display: grid;
+            gap: 8px;
+            width: min(240px, 100%);
+            align-items: start;
+        }
+        .rci-left-stack > button {
+            min-height: 44px;
+        }
+        .rci-left-stack .note {
+            margin: 0;
+            text-align: left;
+        }
+        .rci-left-stack .status {
+            margin: 0;
+            min-height: 1.2em;
+        }
+        .rci-color-pop.hidden {
+            display: none;
+        }
+        .rci-sv-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 6px;
+            border: 1px solid #7ea7d8;
+            overflow: hidden;
+            cursor: crosshair;
+            background:
+                linear-gradient(to top, #000, rgba(0,0,0,0)),
+                linear-gradient(to right, #fff, rgba(255,255,255,0));
+        }
+        .rci-sv-cursor {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px rgba(15, 42, 78, 0.65), 0 1px 3px rgba(0, 0, 0, 0.35);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .rci-color-hue {
+            width: 100%;
+            margin-top: 6px;
+            appearance: none;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 999px;
+            border: 1px solid #7ea7d8;
+            background: linear-gradient(90deg, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            outline: none;
+            padding: 0;
+        }
+        .rci-color-hue::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: #1f4f85;
+            box-shadow: 0 0 0 1px rgba(15, 42, 78, 0.65);
+        }
+        .rci-color-hue::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: #1f4f85;
+            box-shadow: 0 0 0 1px rgba(15, 42, 78, 0.65);
+        }
+        .rci-color-row {
+            margin-top: 5px;
+            display: grid;
+            grid-template-columns: 24px repeat(3, 1fr);
+            gap: 4px;
+            align-items: center;
+        }
+        .rci-eye-row {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 6px;
+            align-items: center;
+        }
+        .rci-eye-btn {
+            margin-top: 0;
+            width: auto;
+            border-radius: 7px;
+            padding: 6px 8px;
+            border: 1px solid #86afd8;
+            background: linear-gradient(180deg, #f8fcff 0%, #dfedff 100%);
+            color: #1e4f7f;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .rci-eye-btn:disabled {
+            opacity: 0.58;
+            cursor: not-allowed;
+        }
+        .rci-pick-status {
+            margin: 0;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #2f5f92;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rci-color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 0 1px rgba(40, 84, 136, 0.45);
+            background: #8b5cf6;
+        }
+        .rci-rgb-box input {
+            text-align: center;
+            padding: 4px 3px;
+            font-size: 0.72rem;
+            border-radius: 6px;
+        }
+        .rci-rgb-box label {
+            margin: 1px 0 0;
+            text-align: center;
+            font-size: 0.56rem;
+            font-weight: 700;
+            color: #1c4c7b;
+        }
+        [data-theme="dark"] .rci-color-pop {
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #162740 0%, #101c31 100%);
+            box-shadow: 0 10px 22px rgba(5, 12, 23, 0.5);
+        }
+        [data-theme="dark"] .rci-controls-row input[type="number"] {
+            border-color: #6b9bd0;
+            background: linear-gradient(180deg, #17345d 0%, #112a4c 100%);
+            color: #eef6ff;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.14),
+                0 4px 12px rgba(8, 24, 47, .28);
+        }
+        [data-theme="dark"] .rci-controls-row input[type="number"]:focus {
+            border-color: #7cb7ff;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.16),
+                0 0 0 3px rgba(78, 151, 232, .24),
+                0 6px 16px rgba(8, 24, 47, .34);
+        }
+        [data-theme="dark"] .rci-step-btn {
+            border-color: #6ea5de;
+            background: linear-gradient(180deg, #2f5f99 0%, #234b7c 100%);
+            color: #eef6ff;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+        }
+        [data-theme="dark"] .rci-sv-wrap,
+        [data-theme="dark"] .rci-color-hue {
+            border-color: #4d6f98;
+        }
+        [data-theme="dark"] .rci-rgb-box label,
+        [data-theme="dark"] .rci-bg-label {
+            color: #bcd5f6;
+        }
+        [data-theme="dark"] .rci-eye-btn {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, #223c61 0%, #1a2f4f 100%);
+            color: #d3e6ff;
+            box-shadow: inset 0 1px 0 rgba(177, 208, 248, 0.14);
+        }
+        [data-theme="dark"] .rci-pick-status {
+            color: #bcd5f6;
+        }
+        #rciDrop.is-dropped {
+            animation: rciDropSuccess 480ms cubic-bezier(.2,.8,.2,1);
+        }
+        @keyframes rciDropSuccess {
+            0% {
+                transform: scale(1);
+                border-color: #4f95e4;
+                box-shadow: 0 0 0 0 rgba(79, 149, 228, 0.35);
+            }
+            35% {
+                transform: scale(1.015);
+                border-color: #22c55e;
+                box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.18);
+            }
+            100% {
+                transform: scale(1);
+                border-color: #8fb3d8;
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+        @media (max-width: 700px) {
+            .rci-controls-row { grid-template-columns: 1fr; }
+            .rci-bg-inline { width: 100%; margin-left: 0; }
+            .rci-bg-palette { width: 100%; }
+            .rci-color-pop {
+                width: 100%;
+                max-width: none;
+                justify-self: stretch;
+            }
+        }
+
+        #rciRadius {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 22px;
+            margin: 0;
+        }
+        #rciRadius::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #4f95e4 0%, #2e73c5 var(--progress, 0%), #ffffff var(--progress, 0%), #ffffff 100%);
+            border: 1px solid #7ea7d8;
+        }
+        #rciRadius::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            margin-top: -6px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffffff 0%, #e7eef8 100%);
+            border: 1px solid #2f6eb8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+        #rciRadius::-moz-range-track {
+            height: 8px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid #7ea7d8;
+        }
+        #rciRadius::-moz-range-progress {
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #4f95e4 0%, #2e73c5 100%);
+            border: 1px solid #2f6eb8;
+        }
+        #rciRadius::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffffff 0%, #e7eef8 100%);
+            border: 1px solid #2f6eb8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Round Corners Image</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Upload an image, set corner radius, preview, and download PNG with rounded corners.</p>
+
+        <section class="card">
+            <input id="rciFile" class="sr-only-input" type="file" accept="image/*">
+            <div id="rciDrop" class="drop-zone" role="button" tabindex="0" aria-label="Load image by click or drag and drop">
+                <p class="drop-title">Drag and drop image here</p>
+                <p class="drop-subtitle">or click to choose file</p>
+            </div>
+
+            <p class="note" style="margin-top:8px;"><span id="rciRadiusText">Original: --</span></p>
+
+            <div id="rciPreviewWrap" class="audio-preview hidden" style="margin-top:12px;">
+                <canvas id="rciPreviewCanvas" aria-label="Rounded corner preview"></canvas>
+            </div>
+
+            <div class="rci-controls-row" style="margin-top:12px;">
+                <div class="control-cell">
+                    <label for="rciRadius">Corner Radius</label>
+                    <input id="rciRadius" type="range" min="0" max="540" step="1" value="24">
+                </div>
+                <div class="control-cell">
+                    <label for="rciRadiusInput">Value</label>
+                    <div class="rci-number-wrap">
+                        <input id="rciRadiusInput" type="number" min="0" max="540" step="1" value="24" aria-label="Corner radius in pixels">
+                        <div class="rci-stepper" aria-hidden="true">
+                            <button id="rciStepUp" class="rci-step-btn" type="button" tabindex="-1">?</button>
+                            <button id="rciStepDown" class="rci-step-btn" type="button" tabindex="-1">?</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-actions rci-actions" style="margin-top:12px;">
+                <div class="rci-left-stack">
+                    <button id="rciRunBtn" type="button">Apply Rounded Corners</button>
+                    <button id="rciDownloadBtn" type="button" class="download-btn hidden">Download PNG</button>
+                    <p id="rciMeta" class="note">Output: --</p>
+                    <p id="rciStatus" class="status" aria-live="polite">Load an image to start.</p>
+                </div>
+                <div class="rci-bg-inline" aria-label="Background color">
+                    <p class="rci-bg-label">Background</p>
+                    <div class="rci-bg-palette" role="radiogroup" aria-label="Rounded background color">
+                        <button type="button" class="rci-bg-swatch transparent is-active" data-rci-bg="transparent" role="radio" aria-checked="true" aria-label="Transparent"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#000000" role="radio" aria-checked="false" aria-label="Black" style="--swatch-color:#000000;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#ffffff" role="radio" aria-checked="false" aria-label="White" style="--swatch-color:#d9d9d9;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#facc15" role="radio" aria-checked="false" aria-label="Yellow" style="--swatch-color:#facc15;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#22c55e" role="radio" aria-checked="false" aria-label="Green" style="--swatch-color:#22c55e;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#f97316" role="radio" aria-checked="false" aria-label="Orange" style="--swatch-color:#f97316;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#3b82f6" role="radio" aria-checked="false" aria-label="Blue" style="--swatch-color:#3b82f6;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#ec4899" role="radio" aria-checked="false" aria-label="Pink" style="--swatch-color:#ec4899;"></button>
+                        <button type="button" class="rci-bg-swatch" data-rci-bg="#ef4444" role="radio" aria-checked="false" aria-label="Red" style="--swatch-color:#ef4444;"></button>
+                        <button id="rciBgCustomBtn" type="button" class="rci-bg-swatch custom" role="radio" aria-checked="false" aria-label="Custom color"></button>
+                    </div>
+                    <div id="rciColorPopover" class="rci-color-pop hidden" role="dialog" aria-label="Custom color picker">
+                        <div id="rciSvWrap" class="rci-sv-wrap" aria-label="Saturation and brightness area">
+                            <span id="rciSvCursor" class="rci-sv-cursor"></span>
+                        </div>
+                        <input id="rciHue" class="rci-color-hue" type="range" min="0" max="360" step="1" value="260" aria-label="Hue">
+                        <div class="rci-eye-row">
+                            <button id="rciEyeDropBtn" class="rci-eye-btn" type="button">Pick From Screen</button>
+                            <p id="rciPickStatus" class="rci-pick-status">Picked color: --</p>
+                        </div>
+                        <div class="rci-color-row">
+                            <div id="rciColorPreview" class="rci-color-preview" aria-hidden="true"></div>
+                            <div class="rci-rgb-box">
+                                <input id="rciR" type="number" min="0" max="255" step="1" value="139" aria-label="Red">
+                                <label for="rciR">R</label>
+                            </div>
+                            <div class="rci-rgb-box">
+                                <input id="rciG" type="number" min="0" max="255" step="1" value="92" aria-label="Green">
+                                <label for="rciG">G</label>
+                            </div>
+                            <div class="rci-rgb-box">
+                                <input id="rciB" type="number" min="0" max="255" step="1" value="246" aria-label="Blue">
+                                <label for="rciB">B</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../round-corners-image.js"></script>
+</body>
+</html>
+

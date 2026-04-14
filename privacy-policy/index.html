@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - ProwebTools</title>
+    <meta name="description" content="Read the Privacy Policy for ProwebTools and understand how data is handled across tools.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://prowebtools.in/privacy-policy/">
+    <link rel="icon" type="image/svg+xml" href="../favicon-index.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        .legal-shell { margin-top: 20px; border: 1px solid rgba(118, 164, 214, 0.85); border-radius: 16px; padding: 18px; background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%); }
+        .legal-shell p { line-height: 1.6; color: var(--text-soft); }
+        .legal-shell h2 { margin-top: 18px; }
+        .site-footer { margin-top: 22px; border-top: 1px solid rgba(126, 167, 216, 0.75); padding-top: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .footer-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .footer-links a { text-decoration: none; color: #0e325c; background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%); border: 1px solid #9fc0e2; border-radius: 999px; padding: 8px 12px; font-size: 0.84rem; font-weight: 700; }
+        .footer-note { margin: 0; color: #2e5d8d; font-size: 0.84rem; font-weight: 600; }
+        [data-theme="dark"] .legal-shell { border-color: #45638b; background: linear-gradient(180deg, rgba(24, 40, 65, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%); }
+        [data-theme="dark"] .site-footer { border-top-color: #45638b; }
+        [data-theme="dark"] .footer-links a { color: #d9e8ff; border-color: #4b6994; background: linear-gradient(180deg, #1f3558 0%, #152846 100%); }
+        [data-theme="dark"] .footer-note, [data-theme="dark"] .legal-shell p { color: #b7cff1; }
+    </style>
+</head>
+<body data-skip-global-faq>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Privacy Policy</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <section class="legal-shell">
+            <p><strong>Effective date:</strong> April 11, 2026</p>
+            <h2>Overview</h2>
+            <p>ProwebTools is designed for practical browser-based utility use. We aim to minimize data collection and keep processing as local as possible.</p>
+            <h2>Data Handling</h2>
+            <p>Most tools process content directly in your browser. When a tool requires network access, the request is limited to performing that specific tool function.</p>
+            <h2>Cookies and Local Storage</h2>
+            <p>We may use local storage for non-sensitive preferences, such as theme settings, to improve usability.</p>
+            <h2>Third-Party Services</h2>
+            <p>Some features may depend on third-party platforms or APIs. Their respective privacy policies apply to those services.</p>
+            <h2>Policy Updates</h2>
+            <p>We may update this policy as tools evolve. Updates will be published on this page with the effective date.</p>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="../">Home</a>
+                <a href="../about-us/">About Us</a>
+                <a href="../terms-and-conditions/">Terms and Conditions</a>
+                <a href="../feedback/">Feedback Form</a>
+            </div>
+            <p class="footer-note">&copy; <span id="currentYear"></span> ProwebTools. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script>document.getElementById("currentYear").textContent = String(new Date().getFullYear());</script>
+</body>
+</html>
