@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIF to PNG Converter Online Free | Thumbnail Generator Tools</title>
+<meta name="description" content="Convert AVIF images to PNG for compatibility.">
+<link rel="icon" type="image/svg+xml" href="favicon-avif-to-png.svg"><link rel="stylesheet" href="style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head><body><main class="app">
+<div class="headline-bar"><h1>AVIF to PNG Converter</h1><div class="tools-group"><button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme"><span class="theme-icon sun">&#9728;</span><span class="theme-track"><span class="theme-thumb"></span></span><span class="theme-icon moon">&#127769;</span></button><details class="tools-menu"><summary class="tools-menu-trigger">All Tools</summary><div class="tools-menu-panel"></div></details></div></div>
+<p class="subtitle">Upload AVIF files and export PNG images quickly.</p>
+<section class="card">
+<input id="a2pFile" class="sr-only-input" type="file" accept="image/avif,.avif,image/*"><div id="a2pDrop" class="drop-zone" role="button" tabindex="0"><p class="drop-title">Drag and drop AVIF image here</p><p class="drop-subtitle">or click to choose file</p></div>
+<div class="convert-actions" style="margin-top:12px;"><button id="a2pRunBtn" type="button">Convert to PNG</button><button id="a2pDownloadBtn" type="button" class="download-btn hidden">Download PNG</button></div>
+<p id="a2pMeta" class="note"></p><p id="a2pStatus" class="status" aria-live="polite">Load an AVIF image to start.</p>
+</section>
+</main>
+<script src="tools-menu.js"></script><script src="theme.js"></script><script src="avif-to-png.js"></script>
+</body></html>

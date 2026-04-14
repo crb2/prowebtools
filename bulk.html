@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Tags Finder Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Find and copy YouTube video tags quickly to improve your video SEO workflow.">
+    <link rel="icon" type="image/svg+xml" href="favicon-bulk.svg">
+    <link rel="stylesheet" href="style-win7.css">
+    <style>
+        /* Keep theme toggle aligned with light-mode palette */
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>YouTube Tags Finder</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+        <p class="subtitle">Paste a YouTube video URL and extract tags used in that video.</p>
+
+        <form id="tagsForm" class="card">
+            <label for="videoUrl">YouTube Video URL</label>
+            <input
+                id="videoUrl"
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                autocomplete="off"
+                required
+            >
+            <label for="youtubeApiKey">YouTube API Key (optional)</label>
+            <input
+                id="youtubeApiKey"
+                type="text"
+                placeholder="AIza..."
+                autocomplete="off"
+            >
+            <div class="bulk-actions">
+                <button type="submit">Find Tags</button>
+                <button id="copyTagsBtn" type="button">Copy Tags</button>
+            </div>
+            <p id="tagsStatus" class="status" aria-live="polite"></p>
+        </form>
+
+        <section id="tagsResult" class="result hidden">
+            <h2>Extracted Tags</h2>
+            <p id="tagsCount" class="single-preview-size"></p>
+            <div id="tagsList" class="tags-list"></div>
+        </section>
+    </main>
+
+    <script src="tools-menu.js"></script>
+    <script src="theme.js"></script>
+    <script src="bulk.js"></script>
+</body>
+</html>
+
+

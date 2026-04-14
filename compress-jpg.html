@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compress JPG Online Free | Thumbnail Generator Tools</title>
+<meta name="description" content="Compress JPG images with quality control and optional resizing.">
+<link rel="icon" type="image/svg+xml" href="favicon-compress-jpg.svg">
+<link rel="stylesheet" href="style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head><body>
+<main class="app">
+<div class="headline-bar"><h1>Compress JPG</h1><div class="tools-group"><button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme"><span class="theme-icon sun" aria-hidden="true">&#9728;</span><span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span><span class="theme-icon moon" aria-hidden="true">&#127769;</span></button><details class="tools-menu"><summary class="tools-menu-trigger">All Tools</summary><div class="tools-menu-panel"></div></details></div></div>
+<p class="subtitle">Compress JPG photos using adjustable quality and scale.</p>
+<section class="card">
+<input id="cjpgFile" class="sr-only-input" type="file" accept="image/jpeg,image/jpg,image/*">
+<div id="cjpgDrop" class="drop-zone" role="button" tabindex="0"><p class="drop-title">Drag and drop image here</p><p class="drop-subtitle">or click to choose file</p></div>
+<div class="convert-grid fixed-two-col" style="margin-top:12px;"><div><label for="cjpgQuality">Quality: <span id="cjpgQualityText">80</span></label><input id="cjpgQuality" type="range" min="30" max="95" step="1" value="80"></div><div><label for="cjpgScale">Scale: <span id="cjpgScaleText">100%</span></label><input id="cjpgScale" type="range" min="20" max="100" step="1" value="100"></div></div>
+<div class="convert-actions" style="margin-top:12px;"><button id="cjpgRunBtn" type="button">Compress JPG</button><button id="cjpgDownloadBtn" type="button" class="download-btn hidden">Download JPG</button></div>
+<p id="cjpgMeta" class="note"></p><p id="cjpgStatus" class="status" aria-live="polite">Load an image to start.</p>
+</section></main>
+<script src="tools-menu.js"></script><script src="theme.js"></script><script src="compress-jpg.js"></script>
+</body></html>

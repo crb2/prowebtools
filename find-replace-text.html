@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find and Replace Text Online Free | Thumbnail Generator Tools</title>
+<meta name="description" content="Find and replace text quickly with live result and replace count.">
+<link rel="icon" type="image/svg+xml" href="favicon-find-replace-text.svg"><link rel="stylesheet" href="style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head><body><main class="app">
+<div class="headline-bar"><h1>Find and Replace Text</h1><div class="tools-group"><button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme"><span class="theme-icon sun">&#9728;</span><span class="theme-track"><span class="theme-thumb"></span></span><span class="theme-icon moon">&#127769;</span></button><details class="tools-menu"><summary class="tools-menu-trigger">All Tools</summary><div class="tools-menu-panel"></div></details></div></div>
+<p class="subtitle">Paste text, find terms, and replace instantly.</p>
+<section class="card">
+<label for="frInput">Input Text</label><textarea id="frInput" rows="9" placeholder="Paste your text here..."></textarea>
+<div class="convert-grid fixed-two-col" style="margin-top:12px;"><div><label for="frFind">Find</label><input id="frFind" type="text"></div><div><label for="frReplace">Replace With</label><input id="frReplace" type="text"></div></div>
+<div class="convert-grid fixed-two-col" style="margin-top:10px;"><div><label><input id="frCase" type="checkbox" style="width:auto;margin-right:8px;">Case sensitive</label></div><div><label><input id="frRegex" type="checkbox" style="width:auto;margin-right:8px;">Use regex</label></div></div>
+<div class="convert-actions" style="margin-top:12px;"><button id="frRunBtn" type="button">Replace Text</button><button id="frCopyBtn" type="button" class="download-btn">Copy Result</button></div>
+<p id="frStatus" class="status" aria-live="polite">Ready.</p>
+<label for="frOutput" style="margin-top:12px;display:block;">Result</label><textarea id="frOutput" rows="9" placeholder="Output will appear here..."></textarea>
+</section>
+</main>
+<script src="tools-menu.js"></script><script src="theme.js"></script><script src="find-replace-text.js"></script>
+</body></html>

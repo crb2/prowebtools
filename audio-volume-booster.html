@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Volume Booster Online Free | Thumbnail Generator Tools</title>
+<meta name="description" content="Boost audio volume and export louder output with configurable gain.">
+<link rel="icon" type="image/svg+xml" href="favicon-audio-volume-booster.svg">
+<link rel="stylesheet" href="style-win7.css">
+<style>
+body:not(.dark-mode) .theme-switch { border-color:#9fc0e2; background:linear-gradient(180deg,var(--nav-pill-1) 0%,var(--nav-pill-2) 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16); }
+body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow:inset 0 1px 2px rgba(0,0,0,.2); }
+body:not(.dark-mode) .theme-thumb { background:linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
+ #avbGain {
+    --progress: 0%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 22px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+ }
+ #avbGain::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4f95e4 0%, #2e73c5 var(--progress, 0%), #ffffff var(--progress, 0%), #ffffff 100%);
+    border: 1px solid #7ea7d8;
+ }
+ #avbGain::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #ffffff 0%, #e7eef8 100%);
+    border: 1px solid #2f6eb8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+ }
+ #avbGain::-moz-range-track {
+    height: 8px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid #7ea7d8;
+ }
+ #avbGain::-moz-range-progress {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4f95e4 0%, #2e73c5 100%);
+    border: 1px solid #2f6eb8;
+ }
+ #avbGain::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #ffffff 0%, #e7eef8 100%);
+    border: 1px solid #2f6eb8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+ }
+ .avb-settings-grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(180px, 3fr);
+    gap: 12px;
+    align-items: end;
+ }
+ .avb-settings-grid > div {
+    min-width: 0;
+ }
+ #avbPreviewCard {
+    margin-top: 14px;
+    border: 1px solid rgba(138, 179, 222, 0.88);
+    border-radius: 14px;
+    padding: 12px;
+    background:
+        radial-gradient(220px 110px at 92% 2%, rgba(106, 179, 255, 0.24), transparent 66%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(230, 242, 255, 0.82) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 8px 20px rgba(27, 79, 139, 0.2);
+ }
+ #avbPreviewCard h2 {
+    margin: 0 0 10px;
+    font-size: 0.96rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #1b4e81;
+ }
+ #avbPreviewAudio {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #8eb3dc;
+    background: linear-gradient(180deg, #f8fcff 0%, #eaf3ff 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+ }
+ [data-theme="dark"] #avbPreviewCard {
+    border-color: rgba(83, 116, 157, 0.86);
+    background:
+        radial-gradient(220px 110px at 92% 2%, rgba(106, 179, 255, 0.2), transparent 66%),
+        linear-gradient(180deg, rgba(28, 48, 80, 0.9) 0%, rgba(19, 35, 59, 0.9) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(181, 207, 242, 0.13),
+        0 8px 20px rgba(6, 14, 28, 0.4);
+ }
+ [data-theme="dark"] #avbPreviewCard h2 {
+    color: #cfe2ff;
+ }
+ [data-theme="dark"] #avbPreviewAudio {
+    border-color: #4d6f98;
+    background: linear-gradient(180deg, #1a2f4e 0%, #142640 100%);
+ }
+ @media (max-width: 700px) {
+    .avb-settings-grid {
+        grid-template-columns: 1fr;
+    }
+ }
+</style>
+</head>
+<body>
+<main class="app">
+<div class="headline-bar">
+<h1>Audio Volume Booster</h1>
+<div class="tools-group">
+<button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme"><span class="theme-icon sun" aria-hidden="true">&#9728;</span><span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span><span class="theme-icon moon" aria-hidden="true">&#127769;</span></button>
+<details class="tools-menu"><summary class="tools-menu-trigger">All Tools</summary><div class="tools-menu-panel"></div></details>
+</div></div>
+<p class="subtitle">Increase audio loudness and export a boosted audio file.</p>
+<section class="card">
+<input id="avbFile" class="sr-only-input" type="file" accept="audio/*,video/*">
+<div id="avbDrop" class="drop-zone" role="button" tabindex="0"><p class="drop-title">Drag and drop media here</p><p class="drop-subtitle">or click to choose file</p></div>
+<div class="avb-settings-grid">
+<div><label for="avbGain">Gain: <span id="avbGainText">150%</span></label><input id="avbGain" type="range" min="100" max="300" step="5" value="150"></div>
+<div><label for="avbFormat">Output Format</label><select id="avbFormat"><option value="mp3">MP3</option><option value="wav">WAV</option><option value="m4a">M4A</option></select></div>
+</div>
+<div class="convert-actions" style="margin-top:12px;"><button id="avbRunBtn" type="button">Boost Audio</button><button id="avbDownloadBtn" type="button" class="download-btn hidden">Download Boosted Audio</button></div>
+<section id="avbPreviewCard" class="audio-preview hidden" aria-live="polite">
+<h2>Preview Boosted Audio</h2>
+<audio id="avbPreviewAudio" controls preload="metadata"></audio>
+<p id="avbPreviewMeta" class="note" style="margin-top:8px; margin-bottom:0;"></p>
+</section>
+<p id="avbStatus" class="status" aria-live="polite">Load media to start.</p>
+<p id="avbMeta" class="note"></p>
+</section>
+</main>
+<script src="tools-menu.js"></script>
+<script src="theme.js"></script>
+<script src="media-ffmpeg.js"></script>
+<script src="audio-volume-booster.js"></script>
+</body>
+</html>

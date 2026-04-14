@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Video Downloader Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Download publicly accessible Facebook videos for offline viewing where permitted.">
+    <link rel="icon" type="image/svg+xml" href="favicon-facebook-video-downloader.svg">
+    <link rel="stylesheet" href="style-win7.css?v=6">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+
+        /* Tool-specific responsive tuning for mobile/tablet */
+        .input-row {
+            align-items: stretch;
+        }
+
+        #fbUrl {
+            min-width: 0;
+        }
+
+        #fbPasteBtn,
+        #fbFetchBtn {
+            white-space: nowrap;
+            min-height: 40px;
+        }
+
+        #fbQualityActions {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+        }
+
+        #fbQualityActions .fb-quality-btn {
+            width: 100%;
+            min-width: 0;
+            min-height: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .app {
+                padding-inline: 16px;
+            }
+
+            .card,
+            .result {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .subtitle {
+                font-size: 0.98rem;
+                line-height: 1.45;
+            }
+
+            .input-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            #fbUrl {
+                grid-column: 1 / -1;
+            }
+
+            #fbPasteBtn,
+            #fbFetchBtn {
+                width: 100%;
+                padding-inline: 10px;
+            }
+
+            #fbQualityActions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 520px) {
+            .app {
+                padding-inline: 12px;
+            }
+
+            .headline-bar h1 {
+                font-size: clamp(1.06rem, 5.8vw, 1.3rem);
+            }
+
+            .card,
+            .result {
+                padding: 14px;
+                border-radius: 14px;
+            }
+
+            .card > h2,
+            .result > h2 {
+                font-size: 1.13rem;
+                margin-bottom: 10px;
+            }
+
+            #fbStatus,
+            .note {
+                font-size: 0.95rem;
+                line-height: 1.45;
+            }
+
+            #fbQualityActions {
+                grid-template-columns: 1fr;
+                gap: 9px;
+            }
+
+            #fbQualityActions .fb-quality-btn {
+                min-height: 38px;
+            }
+
+            #fbPasteBtn,
+            #fbFetchBtn {
+                min-height: 38px;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+  {"@type":"Question","name":"What does Download Facebook Video do?","acceptedAnswer":{"@type":"Answer","text":"Download Facebook Video helps you complete this task quickly in your browser with minimal setup."}},
+  {"@type":"Question","name":"Is Download Facebook Video free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this tool is designed to be free for common everyday use cases."}},
+  {"@type":"Question","name":"Does this tool work on mobile and desktop?","acceptedAnswer":{"@type":"Answer","text":"Yes, the interface is responsive and built to work across modern mobile and desktop browsers."}}
+]
+    }
+    </script>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Download Facebook Video</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+        <p class="subtitle">Download publicly accessible Facebook videos for offline viewing where permitted.</p>
+
+        <section class="card">
+            <p id="fbVideoTitleTop" class="note hidden"></p>
+            <h2>Paste Facebook Link</h2>
+            <div class="input-row">
+                <input id="fbUrl" type="url" placeholder="https://www.facebook.com/.../videos/..." inputmode="url" autocomplete="off" aria-label="Facebook video URL">
+                <button id="fbPasteBtn" type="button">Paste</button>
+                <button id="fbFetchBtn" type="button">Fetch Options</button>
+            </div>
+            <p id="fbStatus" class="url-note"></p>
+            <p class="note">Only publicly accessible links are supported. Private or login-only videos may fail.</p>
+        </section>
+
+        <section id="fbResult" class="result hidden" aria-live="polite">
+            <h2>Download Quality Options</h2>
+            <p id="fbMeta" class="note"></p>
+            <div id="fbQualityActions" class="quality-actions"></div>
+            <div id="fbDownloadJobs" class="fb-download-jobs hidden" aria-live="polite"></div>
+            <a id="fbDownloadLink" class="download-btn hidden" href="#" download rel="noopener">Download Video</a>
+        </section>
+    </main>
+
+    <script src="tools-menu.js"></script>
+    <script src="theme.js"></script>
+    <script src="facebook-video-downloader.js?v=23"></script>
+</body>
+</html>
+
+
