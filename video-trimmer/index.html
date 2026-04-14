@@ -1,0 +1,813 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Trimmer Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Trim start and end points of your video and export a clean clipped file.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-video-trimmer.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow: inset 0 1px 2px rgba(0,0,0,.2); }
+        body:not(.dark-mode) .theme-thumb { background: linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
+        .trimmer-app {
+            width: calc(100vw - 28px);
+            max-width: none;
+            min-height: calc(100vh - 28px);
+        }
+        .trimmer-app > .card {
+            min-height: calc(100vh - 150px);
+        }
+        .tool-video-preview {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16/9;
+            max-height: min(56vh, 620px);
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid #7ea7d8;
+            background: #0b1a2d;
+            object-fit: contain;
+        }
+        .trim-video-shell {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .trim-video-layer {
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        .trim-vignette-overlay {
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, 0.72) 100%);
+            mix-blend-mode: multiply;
+            opacity: 0;
+        }
+        .trim-noise-overlay {
+            background-image:
+                radial-gradient(rgba(255, 255, 255, 0.24) 0.4px, transparent 0.9px),
+                radial-gradient(rgba(0, 0, 0, 0.22) 0.4px, transparent 0.9px);
+            background-size: 3px 3px, 2px 2px;
+            background-position: 0 0, 1px 1px;
+            mix-blend-mode: soft-light;
+            opacity: 0;
+        }
+        .trim-preview-overlay {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .trim-overlay-chip {
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: .78rem;
+            font-weight: 700;
+            color: #dff0ff;
+            background: rgba(14, 33, 58, 0.8);
+            border: 1px solid rgba(122, 166, 214, 0.62);
+            box-shadow: 0 2px 8px rgba(7, 20, 37, 0.35);
+            backdrop-filter: blur(2px);
+        }
+        .trim-overlay-chip.current {
+            margin: 0 auto;
+            color: #b9e5ff;
+        }
+        .trim-preview-controls {
+            margin-top: 8px;
+        }
+        [data-theme="dark"] .trim-overlay-chip,
+        .dark-mode .trim-overlay-chip {
+            background: rgba(12, 24, 41, 0.82);
+            border-color: rgba(95, 134, 181, 0.66);
+            color: #cde5ff;
+        }
+    :root {
+            --trim-bg-1: #1f3f70;
+            --trim-bg-2: #14305b;
+            --trim-track: #0f2246;
+            --trim-border: var(--line, #7ea7d8);
+            --trim-mask: rgba(8, 28, 58, 0.72);
+            --trim-text: var(--btn-1, #4f95e4);
+            --trim-mid: #6e96ca;
+            --trim-handle-1: var(--btn-1, #4f95e4);
+            --trim-handle-2: var(--btn-2, #2269bc);
+        }
+        [data-theme="dark"],
+        .dark-mode {
+            --trim-bg-1: #1a3258;
+            --trim-bg-2: #102745;
+            --trim-track: #0c1b35;
+            --trim-border: var(--line, #4d6f98);
+            --trim-mask: rgba(3, 11, 23, 0.78);
+            --trim-text: var(--btn-1, #5ca1ef);
+            --trim-mid: #84abd8;
+            --trim-handle-1: var(--btn-1, #5ca1ef);
+            --trim-handle-2: var(--btn-2, #2e73c5);
+        }
+        .trim-timeline-shell {
+            position: relative;
+            margin-top: 14px;
+            border-radius: 14px;
+            padding: 18px 12px 10px;
+            background:
+                radial-gradient(220px 110px at 95% 8%, rgba(112, 185, 255, 0.28), transparent 65%),
+                linear-gradient(180deg, var(--trim-bg-1) 0%, var(--trim-bg-2) 100%);
+            border: 1px solid var(--trim-border);
+            box-shadow:
+                inset 0 1px 0 rgba(190, 223, 255, 0.2),
+                inset 0 -1px 0 rgba(58, 88, 130, 0.42),
+                0 8px 20px rgba(8, 22, 45, 0.34);
+        }
+        .trim-start-pill {
+            position: absolute;
+            top: -10px;
+            left: 14px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #ffffff 0%, #e8f2ff 100%);
+            color: #4f6f95;
+            border: 1px solid #b9d0ea;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            letter-spacing: .01em;
+            box-shadow: 0 2px 6px rgba(36, 84, 138, 0.16);
+        }
+        .trim-track {
+            position: relative;
+            height: 56px;
+            border-radius: 9px;
+            overflow: hidden;
+            background: var(--trim-track);
+            border: 1px solid var(--trim-border);
+            box-shadow: inset 0 1px 0 rgba(190, 224, 255, 0.16);
+        }
+        .trim-thumbs {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .trim-mask {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: var(--trim-mask);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .trim-mask.left { left: 0; width: 0; }
+        .trim-mask.right { right: 0; width: 0; }
+        .trim-selection {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border: 2px solid var(--trim-text);
+            border-radius: 7px;
+            box-shadow:
+                inset 0 0 0 1px rgba(1, 27, 53, 0.36),
+                0 0 0 1px color-mix(in srgb, var(--trim-text) 42%, transparent);
+            pointer-events: none;
+            z-index: 3;
+        }
+        .trim-handle {
+            position: absolute;
+            top: -1px;
+            width: 4px;
+            height: calc(100% + 2px);
+            border: 0;
+            border-radius: 4px;
+            background: linear-gradient(180deg, var(--trim-handle-1) 0%, var(--trim-handle-2) 100%);
+            box-shadow: 0 0 0 1px rgba(3, 35, 66, 0.52);
+            cursor: ew-resize;
+            touch-action: none;
+            z-index: 4;
+        }
+        .trim-handle:hover { filter: brightness(1.06); }
+        .trim-handle:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--trim-text) 34%, transparent), 0 0 0 1px rgba(3, 35, 66, 0.52);
+        }
+        .trim-handle::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 1px;
+            height: 1px;
+            border-radius: 50%;
+            background: rgba(10, 46, 82, 0.78);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -4px 0 rgba(10, 46, 82, 0.78), 0 4px 0 rgba(10, 46, 82, 0.78);
+        }
+        .trim-toast {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 120;
+            max-width: min(92vw, 360px);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #8fb3d8;
+            background: linear-gradient(180deg, rgba(248,252,255,.94) 0%, rgba(230,242,255,.92) 100%);
+            color: #1f4e7f;
+            font-size: .86rem;
+            font-weight: 700;
+            box-shadow: 0 10px 24px rgba(24, 62, 107, 0.26);
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .trim-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        [data-theme="dark"] .trim-toast,
+        .dark-mode .trim-toast {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, rgba(28,46,73,.96) 0%, rgba(20,36,59,.94) 100%);
+            color: #b6d2f4;
+            box-shadow: 0 10px 24px rgba(5, 12, 23, 0.48);
+        }
+        .trim-labels {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            color: var(--trim-text);
+            font-size: .98rem;
+            font-weight: 700;
+            letter-spacing: .01em;
+        }
+        .trim-labels .mid {
+            justify-self: center;
+            color: var(--trim-mid);
+            font-size: .9rem;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .trim-start-pill,
+        .dark-mode .trim-start-pill {
+            background: linear-gradient(180deg, #253f64 0%, #1b3050 100%);
+            border-color: #4f73a0;
+            color: #b6d2f4;
+            box-shadow: 0 2px 6px rgba(5, 12, 23, 0.4);
+        }
+        .trim-option-bars {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px;
+        }
+        .trim-workspace {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: minmax(260px, 0.95fr) minmax(380px, 1.35fr);
+            gap: 12px;
+            align-items: start;
+        }
+        .trim-live-layout {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+            gap: 12px;
+            align-items: start;
+        }
+        .trim-live-left,
+        .trim-live-right {
+            min-width: 0;
+        }
+        .trim-live-left {
+            position: sticky;
+            top: 12px;
+            align-self: start;
+            z-index: 2;
+        }
+        .trim-live-right {
+            display: grid;
+            gap: 12px;
+            align-content: start;
+        }
+        #studioAnimPanel,
+        .trim-preview-controls {
+            display: none !important;
+        }
+        .trim-workspace-left,
+        .trim-workspace-right {
+            min-width: 0;
+        }
+        .trim-option-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 10px 12px;
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,.78) 0%, rgba(231,242,255,.72) 100%);
+        }
+        .trim-option-row.trim-mode-row {
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: 18px;
+        }
+        .trim-option-row.trim-mode-row .trim-toggle {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+        .trim-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f4e7f;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: text;
+        }
+        .trim-toggle input {
+            appearance: none;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            aspect-ratio: 1 / 1;
+            border: 2px solid #7b8ea8;
+            border-radius: 50%;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            position: relative;
+            flex: 0 0 auto;
+        }
+        .trim-toggle input[type="checkbox"] {
+            border-radius: 5px;
+        }
+        .trim-toggle input:checked {
+            border-color: #2f7fce;
+            box-shadow: 0 0 0 1px rgba(79,149,228,.2);
+        }
+        .trim-toggle input:checked::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: inherit;
+            background: linear-gradient(180deg, #69adf2 0%, #2f7fce 100%);
+        }
+        [data-theme="dark"] .trim-option-row,
+        .dark-mode .trim-option-row {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, rgba(28,46,73,.84) 0%, rgba(20,36,59,.88) 100%);
+        }
+        [data-theme="dark"] .trim-toggle,
+        .dark-mode .trim-toggle {
+            color: #b6d2f4;
+        }
+        [data-theme="dark"] .trim-toggle input,
+        .dark-mode .trim-toggle input {
+            border-color: #6d86aa;
+        }
+        .trim-studio {
+            display: grid;
+            gap: 12px;
+        }
+        .studio-panel {
+            border: 1px solid #8fb3d8;
+            border-radius: 14px;
+            padding: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,.74) 0%, rgba(232,242,255,.66) 100%);
+        }
+        .studio-toggle {
+            width: 100%;
+            margin: 0;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(180deg, rgba(255,255,255,.68) 0%, rgba(235,245,255,.62) 100%);
+            color: #153f6a;
+            font-size: 1.06rem;
+            font-weight: 800;
+            padding: 10px 12px;
+            text-align: left;
+            min-height: 0;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+        .studio-toggle::after {
+            content: "\25BE";
+            float: right;
+            font-size: .9rem;
+            color: #2f7fce;
+            transform: rotate(-90deg);
+            transition: transform .15s ease;
+        }
+        .studio-panel.is-open .studio-toggle::after {
+            transform: rotate(0deg);
+        }
+        .studio-content {
+            margin-top: 10px;
+        }
+        .studio-panel:not(.is-open) .studio-content {
+            display: none;
+        }
+        .studio-title {
+            margin: 0 0 10px;
+            font-size: 1.06rem;
+            color: #153f6a;
+            font-weight: 800;
+        }
+        .studio-subtitle {
+            margin: 12px 0 8px;
+            font-size: .95rem;
+            color: #24507b;
+            font-weight: 700;
+        }
+        .studio-slider-list {
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(247,252,255,.9) 0%, rgba(232,242,255,.9) 100%);
+        }
+        .studio-slider-row {
+            display: grid;
+            grid-template-columns: 90px minmax(0, 1fr) 56px;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 10px;
+            border-bottom: 1px solid rgba(134, 175, 216, 0.5);
+        }
+        .studio-slider-row:last-child { border-bottom: 0; }
+        .studio-slider-row label {
+            margin: 0;
+            font-size: .9rem;
+            color: #1f4e7f;
+            font-weight: 700;
+        }
+        .studio-slider-row input[type="range"] {
+            width: 100%;
+            margin: 0;
+            accent-color: #2f7fce;
+            padding: 0;
+        }
+        .studio-slider-row output {
+            text-align: center;
+            border: 1px solid #8fb3d8;
+            border-radius: 9px;
+            padding: 4px 6px;
+            font-size: .84rem;
+            font-weight: 700;
+            color: #1f4e7f;
+            background: linear-gradient(180deg, #f8fcff 0%, #e8f2ff 100%);
+        }
+        .anim-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            border-bottom: 1px solid #8fb3d8;
+            margin: -2px -2px 12px;
+            padding: 0 2px;
+        }
+        .anim-tab {
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: #2b567f;
+            font-weight: 700;
+            padding: 10px 8px;
+            border-bottom: 2px solid transparent;
+            box-shadow: none;
+            text-shadow: none;
+            min-height: 0;
+        }
+        .anim-tab.is-active {
+            color: #2f7fce;
+            border-bottom-color: #2f7fce;
+            background: rgba(79,149,228,.06);
+        }
+        .anim-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+        .anim-card {
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            padding: 10px 9px;
+            background: linear-gradient(180deg, #f8fcff 0%, #ebf4ff 100%);
+            color: #1f4e7f;
+            font-size: .85rem;
+            font-weight: 700;
+            text-align: left;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+        }
+        .anim-card.is-active {
+            border-color: #2f7fce;
+            color: #2f7fce;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 0 0 1px rgba(47,127,206,.22);
+        }
+        .anim-zoom-panel { display: grid; gap: 10px; }
+        .anim-zoom-preview {
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            padding: 8px;
+            background: linear-gradient(180deg, #f8fcff 0%, #eaf4ff 100%);
+        }
+        .anim-zoom-preview video {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 9px;
+            border: 1px solid #7ea7d8;
+            background: #0f2246;
+        }
+        .anim-depth-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+        }
+        .anim-speed-row {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            padding: 8px 10px;
+            background: linear-gradient(180deg, #f8fcff 0%, #ebf4ff 100%);
+        }
+        .anim-speed-row label {
+            margin: 0;
+            color: #2b567f;
+            font-size: .9rem;
+        }
+        .anim-speed-row output {
+            font-size: .86rem;
+            font-weight: 700;
+            color: #2b567f;
+        }
+        [data-theme="dark"] .studio-panel,
+        .dark-mode .studio-panel {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, rgba(28,46,73,.84) 0%, rgba(20,36,59,.88) 100%);
+        }
+        [data-theme="dark"] .studio-title,
+        [data-theme="dark"] .studio-subtitle,
+        [data-theme="dark"] .studio-toggle,
+        .dark-mode .studio-title,
+        .dark-mode .studio-subtitle,
+        .dark-mode .studio-toggle {
+            color: #c6dcfa;
+        }
+        [data-theme="dark"] .studio-toggle,
+        .dark-mode .studio-toggle {
+            background: linear-gradient(180deg, rgba(29,48,74,.85) 0%, rgba(22,38,62,.84) 100%);
+        }
+        [data-theme="dark"] .studio-slider-list,
+        [data-theme="dark"] .anim-zoom-preview,
+        [data-theme="dark"] .anim-speed-row,
+        .dark-mode .studio-slider-list,
+        .dark-mode .anim-zoom-preview,
+        .dark-mode .anim-speed-row {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, rgba(22,38,63,.92) 0%, rgba(16,29,49,.92) 100%);
+        }
+        [data-theme="dark"] .studio-slider-row,
+        .dark-mode .studio-slider-row {
+            border-bottom-color: rgba(77,111,152,.52);
+        }
+        [data-theme="dark"] .studio-slider-row label,
+        [data-theme="dark"] .studio-slider-row output,
+        [data-theme="dark"] .anim-speed-row label,
+        [data-theme="dark"] .anim-speed-row output,
+        .dark-mode .studio-slider-row label,
+        .dark-mode .studio-slider-row output,
+        .dark-mode .anim-speed-row label,
+        .dark-mode .anim-speed-row output {
+            color: #b6d2f4;
+        }
+        [data-theme="dark"] .studio-slider-row output,
+        .dark-mode .studio-slider-row output {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, #223c61 0%, #1a2f4f 100%);
+        }
+        [data-theme="dark"] .anim-tabs,
+        .dark-mode .anim-tabs {
+            border-bottom-color: #4d6f98;
+        }
+        [data-theme="dark"] .anim-tab,
+        .dark-mode .anim-tab {
+            color: #9fc2eb;
+        }
+        [data-theme="dark"] .anim-tab.is-active,
+        .dark-mode .anim-tab.is-active {
+            color: #67b3ff;
+            border-bottom-color: #67b3ff;
+            background: rgba(103,179,255,.08);
+        }
+        [data-theme="dark"] .anim-card,
+        .dark-mode .anim-card {
+            border-color: #4d6f98;
+            background: linear-gradient(180deg, #223c61 0%, #1a2f4f 100%);
+            color: #c7dcf8;
+        }
+        [data-theme="dark"] .anim-card.is-active,
+        .dark-mode .anim-card.is-active {
+            border-color: #5ca1ef;
+            color: #67b3ff;
+            box-shadow: inset 0 1px 0 rgba(177,208,248,.14), 0 0 0 1px rgba(92,161,239,.2);
+        }
+        @media (max-width: 1100px) {
+            .trim-live-layout { grid-template-columns: 1fr; }
+            .trim-live-left {
+                position: static;
+                top: auto;
+            }
+        }
+        @media (max-width: 740px) {
+            .trimmer-app {
+                width: calc(100vw - 12px);
+                min-height: auto;
+            }
+            .trimmer-app > .card {
+                min-height: auto;
+            }
+            .trim-workspace { grid-template-columns: 1fr; }
+            .studio-slider-row { grid-template-columns: 80px minmax(0, 1fr) 52px; }
+            .anim-depth-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <main class="app trimmer-app">
+        <div class="headline-bar">
+            <h1>Video Trimmer</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Choose trim points and export only the section you need.</p>
+
+        <section class="card">
+            <input id="trimFile" class="sr-only-input" type="file" accept="video/*">
+            <div id="trimDrop" class="drop-zone" role="button" tabindex="0" aria-label="Load video by click or drag and drop">
+                <p class="drop-title">Drag and drop video here</p>
+                <p class="drop-subtitle">or click to choose file</p>
+            </div>
+
+            <div id="trimPreviewWrap" class="audio-preview" style="margin-top:12px;">
+                <div class="trim-live-layout">
+                    <div class="trim-live-left">
+                        <section id="studioAdjustPanel" class="studio-panel is-open">
+                            <button id="studioAdjustToggle" type="button" class="studio-toggle" aria-expanded="true" aria-controls="studioAdjustContent">Adjust Video</button>
+                            <div id="studioAdjustContent" class="studio-content">
+                                <h4 class="studio-subtitle">Color Correction</h4>
+                                <div class="studio-slider-list">
+                                    <div class="studio-slider-row"><label for="adjBrightness">Brightness</label><input id="adjBrightness" type="range" min="-100" max="100" step="1" value="0"><output id="adjBrightnessVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjContrast">Contrast</label><input id="adjContrast" type="range" min="-100" max="100" step="1" value="0"><output id="adjContrastVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjExposure">Exposure</label><input id="adjExposure" type="range" min="-100" max="100" step="1" value="0"><output id="adjExposureVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjHue">Hue</label><input id="adjHue" type="range" min="-180" max="180" step="1" value="0"><output id="adjHueVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjSaturation">Saturation</label><input id="adjSaturation" type="range" min="-100" max="100" step="1" value="0"><output id="adjSaturationVal">0</output></div>
+                                </div>
+                                <h4 class="studio-subtitle">Effects</h4>
+                                <div class="studio-slider-list">
+                                    <div class="studio-slider-row"><label for="adjSharpen">Sharpen</label><input id="adjSharpen" type="range" min="0" max="100" step="1" value="0"><output id="adjSharpenVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjNoise">Noise</label><input id="adjNoise" type="range" min="0" max="100" step="1" value="0"><output id="adjNoiseVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjBlur">Blur</label><input id="adjBlur" type="range" min="0" max="100" step="1" value="0"><output id="adjBlurVal">0</output></div>
+                                    <div class="studio-slider-row"><label for="adjVignette">Vignette</label><input id="adjVignette" type="range" min="0" max="100" step="1" value="0"><output id="adjVignetteVal">0</output></div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <div class="trim-live-right">
+                        <h3 class="preview-title">Source Preview</h3>
+                        <div class="trim-video-shell">
+                            <video id="trimPreview" class="tool-video-preview" controls></video>
+                            <div id="trimVignetteOverlay" class="trim-video-layer trim-vignette-overlay"></div>
+                            <div id="trimNoiseOverlay" class="trim-video-layer trim-noise-overlay"></div>
+                        </div>
+                        <div class="preview-controls trim-preview-controls">
+                            <button id="trimPlayBtn" type="button" class="preview-btn" aria-label="Play preview">Play</button>
+                            <input id="trimSeek" class="preview-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Seek preview">
+                            <span id="trimTime" class="preview-time">0:00 / 0:00</span>
+                        </div>
+
+                        <div class="trim-timeline-shell">
+                            <span id="trimStartPill" class="trim-start-pill">00:00.0</span>
+                            <div id="trimTrack" class="trim-track">
+                                <canvas id="trimThumbs" class="trim-thumbs" width="900" height="56" aria-label="Video thumbnail timeline"></canvas>
+                                <div id="trimMaskLeft" class="trim-mask left"></div>
+                                <div id="trimMaskRight" class="trim-mask right"></div>
+                                <div id="trimSelection" class="trim-selection"></div>
+                                <button id="trimHandleStart" type="button" class="trim-handle" aria-label="Trim start handle" title="Start handle: use A and D keys"></button>
+                                <button id="trimHandleEnd" type="button" class="trim-handle" aria-label="Trim end handle" title="End handle: use W and S keys"></button>
+                            </div>
+                            <div class="trim-labels">
+                                <span id="trimLabelStart">00:00.0</span>
+                                <span id="trimLabelDuration" class="mid">Selected: 00:00.0</span>
+                                <span id="trimLabelEnd">00:00.0</span>
+                            </div>
+                        </div>
+
+                        <div class="convert-grid fixed-two-col" style="margin-top:12px;">
+                            <div>
+                                <label for="trimStart">Start Time (MM:SS or HH:MM:SS)</label>
+                                <input id="trimStart" type="text" placeholder="00:00" value="00:00">
+                            </div>
+                            <div>
+                                <label for="trimEnd">End Time (MM:SS or HH:MM:SS)</label>
+                                <input id="trimEnd" type="text" placeholder="00:30" value="00:30">
+                            </div>
+                        </div>
+
+                        <div class="trim-option-bars">
+                            <div class="trim-option-row trim-mode-row" role="radiogroup" aria-label="Trim mode">
+                                <label class="trim-toggle" for="trimModeDelete">
+                                    <input id="trimModeDelete" name="trimMode" type="radio" value="delete">
+                                    <span>Delete Selected</span>
+                                </label>
+                                <label class="trim-toggle" for="trimModeExtract">
+                                    <input id="trimModeExtract" name="trimMode" type="radio" value="extract" checked>
+                                    <span>Extract Selected</span>
+                                </label>
+                            </div>
+                            <div class="trim-option-row">
+                                <label class="trim-toggle" for="trimFadeIn">
+                                    <input id="trimFadeIn" type="checkbox">
+                                    <span>Fade in</span>
+                                </label>
+                                <label class="trim-toggle" for="trimFadeOut">
+                                    <input id="trimFadeOut" type="checkbox">
+                                    <span>Fade out</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <section id="studioAnimPanel" class="studio-panel" style="margin-top:12px;">
+                            <button id="studioAnimToggle" type="button" class="studio-toggle" aria-expanded="false" aria-controls="studioAnimContent">Animations</button>
+                            <div id="studioAnimContent" class="studio-content">
+                                <div class="anim-tabs">
+                                    <button type="button" class="anim-tab is-active" data-anim-tab="in">In</button>
+                                    <button type="button" class="anim-tab" data-anim-tab="out">Out</button>
+                                    <button type="button" class="anim-tab" data-anim-tab="loop">Loop</button>
+                                    <button type="button" class="anim-tab" data-anim-tab="zoom">Zoom</button>
+                                </div>
+
+                                <div id="animGridPanel" class="anim-grid"></div>
+
+                                <div id="animZoomPanel" class="anim-zoom-panel hidden">
+                                    <div class="anim-zoom-preview">
+                                        <video id="animZoomPreview" muted playsinline preload="metadata"></video>
+                                    </div>
+                                    <div class="anim-depth-row">
+                                        <button type="button" class="anim-card" data-zoom-depth="none">None</button>
+                                        <button type="button" class="anim-card is-active" data-zoom-depth="shallow">Shallow</button>
+                                        <button type="button" class="anim-card" data-zoom-depth="moderate">Moderate</button>
+                                        <button type="button" class="anim-card" data-zoom-depth="deep">Deep</button>
+                                    </div>
+                                    <div class="anim-speed-row">
+                                        <label for="animZoomSpeed">Speed</label>
+                                        <input id="animZoomSpeed" type="range" min="0.4" max="3" step="0.1" value="1.2">
+                                        <output id="animZoomSpeedVal">1.2s</output>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="convert-actions" style="margin-top:12px;">
+                    <button id="trimRunBtn" type="button">Trim Video</button>
+                    <button id="trimDownloadBtn" type="button" class="download-btn hidden">Download Trimmed Video</button>
+                </div>
+            </div>
+
+            <p id="trimStatus" class="status" aria-live="polite">Load a video to start.</p>
+        </section>
+    </main>
+    <div id="trimControlsToast" class="trim-toast" role="status" aria-live="polite"></div>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../media-ffmpeg.js"></script>
+    <script src="../video-trimmer.js"></script>
+</body>
+</html>
+
