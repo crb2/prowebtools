@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter and Validator Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Beautify, minify, validate, and copy JSON with clear error location in your browser.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-json-formatter-validator.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch { border-color:#9fc0e2; background:linear-gradient(180deg,var(--nav-pill-1) 0%,var(--nav-pill-2) 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(116,158,205,.45),0 2px 8px rgba(40,89,149,.16); }
+        body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow:inset 0 1px 2px rgba(0,0,0,.2); }
+        body:not(.dark-mode) .theme-thumb { background:linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
+        .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+        .tool-grid textarea{min-height:280px;resize:vertical}
+        @media (max-width:900px){.tool-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<main class="app">
+    <div class="headline-bar">
+        <h1>JSON Formatter and Validator</h1>
+        <div class="tools-group">
+            <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme"><span class="theme-icon sun" aria-hidden="true">&#9728;</span><span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span><span class="theme-icon moon" aria-hidden="true">&#127769;</span></button>
+            <details class="tools-menu"><summary class="tools-menu-trigger">All Tools</summary><div class="tools-menu-panel"></div></details>
+        </div>
+    </div>
+    <p class="subtitle">Paste JSON and format, validate, or minify it instantly.</p>
+    <section class="card">
+        <div class="convert-actions">
+            <button id="jsonBeautify" type="button">Beautify</button>
+            <button id="jsonMinify" type="button" class="download-btn">Minify</button>
+            <button id="jsonValidate" type="button" class="download-btn">Validate</button>
+            <button id="jsonCopy" type="button" class="download-btn">Copy Output</button>
+            <button id="jsonDownload" type="button" class="download-btn">Download .json</button>
+        </div>
+        <div class="tool-grid">
+            <div>
+                <label for="jsonInput">Input JSON</label>
+                <textarea id="jsonInput" placeholder='{"name":"Tool","active":true}'></textarea>
+            </div>
+            <div>
+                <label for="jsonOutput">Output</label>
+                <textarea id="jsonOutput" readonly placeholder="Formatted output appears here"></textarea>
+            </div>
+        </div>
+        <p id="jsonStatus" class="status" aria-live="polite">Paste JSON to start.</p>
+        <p id="jsonMeta" class="note">Keys: -- | Size: --</p>
+    </section>
+</main>
+<script src="../tools-menu.js"></script>
+<script src="../theme.js"></script>
+<script src="../json-formatter-validator.js"></script>
+</body>
+</html>
+

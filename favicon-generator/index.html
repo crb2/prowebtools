@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Generate favicon PNG sizes and ICO file from one uploaded image in your browser.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-favicon-generator.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg,#fff 0%,#e8edf4 100%);
+        }
+
+        .fg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .fg-item {
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,.5);
+        }
+
+        [data-theme="dark"] .fg-item {
+            background: rgba(8, 22, 42, .55);
+            border-color: #385983;
+        }
+
+        .fg-item canvas {
+            width: 100%;
+            image-rendering: crisp-edges;
+            border-radius: 8px;
+            background: repeating-conic-gradient(#eef3fa 0% 25%, #dbe5f4 0% 50%) 50% / 12px 12px;
+            border: 1px solid #9fc0e2;
+        }
+
+        .fg-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #fgCode {
+            margin-top: 12px;
+            width: 100%;
+            min-height: 130px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Favicon Generator</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Upload one logo and instantly export favicon PNG sizes plus classic <code>favicon.ico</code>.</p>
+
+        <section class="card">
+            <input id="fgFile" class="sr-only-input" type="file" accept="image/*">
+            <div id="fgDrop" class="drop-zone" role="button" tabindex="0" aria-label="Load image by click or drag and drop">
+                <p class="drop-title">Drag and drop image here</p>
+                <p class="drop-subtitle">or click to choose file</p>
+            </div>
+
+            <div class="fg-actions">
+                <button id="fgGenerateBtn" type="button">Generate Favicons</button>
+                <button id="fgDownloadAllBtn" type="button" class="download-btn" disabled>Download All PNG</button>
+                <button id="fgDownloadIcoBtn" type="button" class="download-btn" disabled>Download ICO</button>
+                <button id="fgCopyCodeBtn" type="button" class="download-btn" disabled>Copy HTML Tags</button>
+            </div>
+
+            <p id="fgStatus" class="status" aria-live="polite">Load a square logo (PNG recommended).</p>
+            <p id="fgMeta" class="note">Source: --</p>
+
+            <div id="fgGrid" class="fg-grid"></div>
+
+            <label for="fgCode" style="margin-top:12px;">Favicon HTML Snippet</label>
+            <textarea id="fgCode" readonly placeholder="Generate first to get copy-ready favicon tags."></textarea>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../favicon-generator.js"></script>
+</body>
+</html>
+

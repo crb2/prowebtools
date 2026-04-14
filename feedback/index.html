@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form - ProwebTools</title>
+    <meta name="description" content="Share your feedback about ProwebTools and help us improve the experience.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://prowebtools.in/feedback/">
+    <link rel="icon" type="image/svg+xml" href="../favicon-index.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        .feedback-shell {
+            margin-top: 20px;
+            border: 1px solid rgba(118, 164, 214, 0.85);
+            border-radius: 16px;
+            padding: 18px;
+            background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%);
+        }
+        .feedback-shell p {
+            line-height: 1.6;
+            color: var(--text-soft);
+        }
+        .feedback-form {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
+        }
+        .feedback-form label {
+            font-weight: 700;
+            color: #1a446f;
+            font-size: 0.92rem;
+        }
+        .feedback-form input,
+        .feedback-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 10px;
+            border: 1px solid #9fc0e2;
+            padding: 10px 12px;
+            font: inherit;
+            background: #fff;
+            color: #14385f;
+        }
+        .feedback-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .feedback-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .feedback-submit {
+            border: 1px solid #8cb2dc;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            color: #113c6c;
+            background: linear-gradient(180deg, #ffffff 0%, #e7f2ff 100%);
+            cursor: pointer;
+        }
+        .feedback-status {
+            margin: 0;
+            font-weight: 700;
+            color: #2d5f90;
+            font-size: 0.9rem;
+        }
+        .feedback-status.is-error {
+            color: #a02b2b;
+        }
+        .site-footer {
+            margin-top: 22px;
+            border-top: 1px solid rgba(126, 167, 216, 0.75);
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            text-decoration: none;
+            color: #0e325c;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            border: 1px solid #9fc0e2;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+        .footer-note {
+            margin: 0;
+            color: #2e5d8d;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .feedback-shell {
+            border-color: #45638b;
+            background: linear-gradient(180deg, rgba(24, 40, 65, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%);
+        }
+        [data-theme="dark"] .feedback-form label,
+        [data-theme="dark"] .feedback-status,
+        [data-theme="dark"] .feedback-shell p {
+            color: #c7dbf7;
+        }
+        [data-theme="dark"] .feedback-form input,
+        [data-theme="dark"] .feedback-form textarea {
+            border-color: #4b6994;
+            background: #12233d;
+            color: #e2edff;
+        }
+        [data-theme="dark"] .feedback-submit {
+            color: #d9e8ff;
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
+        }
+        [data-theme="dark"] .site-footer {
+            border-top-color: #45638b;
+        }
+        [data-theme="dark"] .footer-links a {
+            color: #d9e8ff;
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
+        }
+        [data-theme="dark"] .footer-note {
+            color: #b7cff1;
+        }
+    </style>
+</head>
+<body data-skip-global-faq>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Feedback Form</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <section class="feedback-shell">
+            <p>Your suggestions help us improve ProwebTools. Share what is working, what feels confusing, or what tools you want next.</p>
+            <form id="feedbackForm" class="feedback-form" novalidate>
+                <div>
+                    <label for="feedbackName">Name</label>
+                    <input id="feedbackName" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+                </div>
+                <div>
+                    <label for="feedbackEmail">Email</label>
+                    <input id="feedbackEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                </div>
+                <div>
+                    <label for="feedbackMessage">Feedback</label>
+                    <textarea id="feedbackMessage" name="message" placeholder="Write your feedback..." required></textarea>
+                </div>
+                <div class="feedback-actions">
+                    <button class="feedback-submit" type="submit">Submit Feedback</button>
+                    <p id="feedbackStatus" class="feedback-status" aria-live="polite"></p>
+                </div>
+            </form>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="../">Home</a>
+                <a href="../about-us/">About Us</a>
+                <a href="../privacy-policy/">Privacy Policy</a>
+                <a href="../terms-and-conditions/">Terms and Conditions</a>
+            </div>
+            <p class="footer-note">&copy; <span id="currentYear"></span> ProwebTools. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script>
+        (function () {
+            document.getElementById("currentYear").textContent = String(new Date().getFullYear());
+
+            const form = document.getElementById("feedbackForm");
+            const status = document.getElementById("feedbackStatus");
+            if (!form || !status) return;
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const name = String(document.getElementById("feedbackName")?.value || "").trim();
+                const email = String(document.getElementById("feedbackEmail")?.value || "").trim();
+                const message = String(document.getElementById("feedbackMessage")?.value || "").trim();
+
+                if (!name || !email || !message) {
+                    status.textContent = "Please fill out all fields before submitting.";
+                    status.classList.add("is-error");
+                    return;
+                }
+
+                status.classList.remove("is-error");
+                status.textContent = "Thank you. Your feedback has been submitted.";
+                form.reset();
+            });
+        })();
+    </script>
+</body>
+</html>

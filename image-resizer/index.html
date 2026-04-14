@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Resize images by exact width and height and export as JPG, PNG, or WebP.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-image-resizer.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Image Resizer</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Resize images with locked aspect ratio and export in your preferred format.</p>
+
+        <section class="card">
+            <input id="irFile" class="sr-only-input" type="file" accept="image/*">
+            <div id="irDrop" class="drop-zone" role="button" tabindex="0" aria-label="Load image by click or drag and drop">
+                <p class="drop-title">Drag and drop image here</p>
+                <p class="drop-subtitle">or click to choose file</p>
+            </div>
+
+            <div class="convert-grid fixed-two-col" style="margin-top:12px;">
+                <div>
+                    <label for="irWidth">Width (px)</label>
+                    <input id="irWidth" type="number" min="1" step="1">
+                </div>
+                <div>
+                    <label for="irHeight">Height (px)</label>
+                    <input id="irHeight" type="number" min="1" step="1">
+                </div>
+            </div>
+
+            <div class="convert-grid fixed-two-col" style="margin-top:10px;align-items:end;">
+                <div>
+                    <label for="irFormat">Output Format</label>
+                    <select id="irFormat">
+                        <option value="image/png">PNG</option>
+                        <option value="image/jpeg">JPG</option>
+                        <option value="image/webp">WEBP</option>
+                    </select>
+                </div>
+                <div>
+                    <label><input id="irLock" type="checkbox" checked style="width:auto;margin-right:8px;">Keep Aspect Ratio</label>
+                </div>
+            </div>
+
+            <div class="convert-actions" style="margin-top:12px;">
+                <button id="irRunBtn" type="button">Resize Image</button>
+                <button id="irDownloadBtn" type="button" class="download-btn hidden">Download Resized Image</button>
+            </div>
+            <p id="irMeta" class="note"></p>
+            <p id="irStatus" class="status" aria-live="polite">Load an image to start.</p>
+
+            <div id="irPreviewWrap" class="audio-preview hidden" style="margin-top:10px;">
+                <h3 class="preview-title">Preview</h3>
+                <img id="irPreview" alt="Resized output preview" style="width:100%;max-height:340px;object-fit:contain;border-radius:10px;background:#e8f2ff;border:1px solid #8fb3d8;">
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>FAQs</h2>
+            <details class="faq-item" open><summary>Can I keep the original aspect ratio?</summary><p>Yes, keep-aspect mode automatically updates the other dimension as you type.</p></details>
+            <details class="faq-item"><summary>Which formats are supported?</summary><p>PNG, JPG, and WEBP exports are supported in modern browsers.</p></details>
+            <details class="faq-item"><summary>Does this reduce file size too?</summary><p>Usually yes, especially when resizing to smaller dimensions or exporting JPG/WEBP.</p></details>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../image-resizer.js"></script>
+</body>
+</html>
+
