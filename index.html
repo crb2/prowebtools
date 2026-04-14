@@ -1,0 +1,521 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProwebTools - Free Online Tools for Image, Video, PDF and Text</title>
+    <meta name="description" content="ProwebTools offers free browser-based tools for YouTube thumbnails, image editing, video utilities, PDF tasks, and developer text utilities.">
+    <meta name="keywords" content="prowebtools, online tools, youtube thumbnail downloader, image tools, video tools, pdf tools, json formatter, regex tester">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+    <link rel="canonical" href="https://prowebtools.in/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ProwebTools - Free Online Tools">
+    <meta property="og:description" content="Use powerful free online tools for image, video, PDF, and text tasks.">
+    <meta property="og:url" content="https://prowebtools.in/">
+    <meta property="og:site_name" content="ProwebTools">
+    <meta property="og:image" content="https://prowebtools.in/favicon-index.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ProwebTools - Free Online Tools">
+    <meta name="twitter:description" content="Free browser-based tools for creators, developers, and students.">
+    <meta name="theme-color" content="#1c62b5">
+    <link rel="icon" type="image/svg+xml" href="favicon-index.svg">
+    <link rel="stylesheet" href="style-win7.css">
+    <style>
+        .content {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+
+        .title {
+            margin: 0;
+            background: transparent;
+            font-size: clamp(1.42rem, 3.1vw, 2.2rem);
+            font-weight: 900;
+            letter-spacing: clamp(-1.75px, -0.25vw, -3.5px);
+            text-shadow:
+                0 1px 0 rgba(0, 0, 0, 0.45),
+                0 0 8px rgba(121, 196, 255, 0.2);
+            position: relative;
+            overflow: visible;
+            border-radius: 0;
+            padding: 0.12em 0.12em 0.16em;
+            isolation: isolate;
+            line-height: 1.22;
+            max-width: 100%;
+        }
+
+        .title::after {
+            content: none;
+        }
+
+        .title .title-text {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            display: inline-block;
+            padding: 0.06em 0.08em 0.1em;
+            white-space: nowrap;
+            background: linear-gradient(
+                90deg,
+                #8f73ff 0%,
+                #4aa0ff 12.5%,
+                #25d3ff 25%,
+                #62ffc7 37.5%,
+                #f7ee62 50%,
+                #62ffc7 62.5%,
+                #25d3ff 75%,
+                #4aa0ff 87.5%,
+                #8f73ff 100%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 0 transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 1px #000000) drop-shadow(0 1px 0 #000000);
+            animation: titleFlow 16s linear infinite;
+        }
+
+        [data-theme="dark"] .title .title-text {
+            -webkit-text-stroke: 0 transparent;
+            text-shadow: none;
+            filter: none;
+        }
+
+        @keyframes titleFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: -200% 50%; }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .hero-card {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid rgba(118, 164, 214, 0.85);
+            border-radius: 16px;
+            background:
+                radial-gradient(640px 260px at 90% -20%, rgba(59, 134, 220, 0.26), rgba(59, 134, 220, 0) 64%),
+                linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -1px 0 rgba(132, 172, 217, 0.4),
+                0 8px 24px rgba(31, 85, 149, 0.16);
+        }
+
+        .hero-title {
+            margin: 0;
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+        }
+
+        .hero-subtitle {
+            margin: 10px 0 0;
+            color: var(--text-soft);
+            line-height: 1.55;
+            max-width: 760px;
+        }
+
+        .search-row {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #toolSearch {
+            width: 100%;
+        }
+
+        .tool-count {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #245486;
+            border: 1px solid #9fc0e2;
+            background: linear-gradient(180deg, #f8fcff 0%, #e4f0ff 100%);
+            border-radius: 999px;
+            padding: 9px 14px;
+            white-space: nowrap;
+        }
+
+        .section-list {
+            margin-top: 20px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .tool-section {
+            border: 1px solid rgba(118, 164, 214, 0.78);
+            border-radius: 14px;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(232, 244, 255, 0.72) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 6px 18px rgba(34, 88, 150, 0.12);
+        }
+
+        .tool-section h2 {
+            margin: 0;
+            font-size: 1.02rem;
+        }
+
+        .section-note {
+            margin: 6px 0 0;
+            font-size: 0.88rem;
+            color: var(--text-soft);
+        }
+
+        .tool-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .tool-link {
+            display: block;
+            text-decoration: none;
+            border: 1px solid #9fc0e2;
+            border-radius: 12px;
+            padding: 12px;
+            color: #113c6c;
+            font-weight: 700;
+            background: linear-gradient(180deg, #ffffff 0%, #e9f3ff 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 3px 10px rgba(40, 89, 149, 0.1);
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .tool-link:hover {
+            transform: translateY(-1px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 6px 16px rgba(33, 89, 154, 0.22);
+        }
+
+        .tool-link small {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #3e648f;
+        }
+
+        .home-empty {
+            margin-top: 16px;
+            border: 1px dashed #8eb1d8;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 700;
+            color: #2e5c8c;
+            background: rgba(236, 246, 255, 0.8);
+        }
+
+        .site-footer {
+            margin-top: 24px;
+            border-top: 1px solid rgba(126, 167, 216, 0.75);
+            padding-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #0e325c;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            border: 1px solid #9fc0e2;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .footer-note {
+            margin: 0;
+            color: #2e5d8d;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .hero-card,
+        [data-theme="dark"] .tool-section {
+            border-color: #45638b;
+            background: linear-gradient(180deg, rgba(24, 40, 65, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%);
+        }
+
+        [data-theme="dark"] .tool-count,
+        [data-theme="dark"] .tool-link,
+        [data-theme="dark"] .home-empty,
+        [data-theme="dark"] .footer-links a {
+            color: #d9e8ff;
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
+        }
+
+        [data-theme="dark"] .tool-link small,
+        [data-theme="dark"] .footer-note,
+        [data-theme="dark"] .section-note,
+        [data-theme="dark"] .hero-subtitle {
+            color: #b7cff1;
+        }
+
+        [data-theme="dark"] .title {
+            background: transparent;
+        }
+
+        [data-theme="dark"] .site-footer {
+            border-top-color: #45638b;
+        }
+
+        @media (max-width: 860px) {
+            .tool-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title {
+                font-size: clamp(1.04rem, 5.3vw, 1.38rem);
+                padding: 0;
+            }
+
+            .title .title-text {
+                padding: 0.08em 0.1em 0.13em;
+            }
+
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .site-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .headline-bar {
+            align-items: center;
+        }
+
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "ProwebTools",
+      "url": "https://prowebtools.in/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://prowebtools.in/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+</head>
+<body data-skip-global-faq>
+    <main class="app">
+        <div class="headline-bar">
+            <div class="content">
+                <h1 class="title">
+                    <span class="title-text">ProwebTools</span>
+                </h1>
+            </div>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+            </div>
+        </div>
+
+        <section class="hero-card" aria-labelledby="home-title">
+            <h1 id="home-title" class="hero-title">All Tools in One Professional Workspace</h1>
+            <p class="hero-subtitle">Find and launch every tool from one organized homepage. Search by name, jump to your task in seconds, and keep a clean workflow across image, video, PDF, and utility tools.</p>
+            <div class="search-row">
+                <label for="toolSearch" class="sr-only">Search tools</label>
+                <input id="toolSearch" type="search" placeholder="Search tools (example: thumbnail, pdf, image, regex)">
+                <span id="toolCount" class="tool-count" aria-live="polite">0 tools</span>
+            </div>
+        </section>
+
+        <div id="toolSections" class="section-list"></div>
+        <p id="homeEmpty" class="home-empty hidden">No tools matched your search. Try another keyword.</p>
+
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="about-us/">About Us</a>
+                <a href="privacy-policy/">Privacy Policy</a>
+                <a href="terms-and-conditions/">Terms and Conditions</a>
+                <a href="feedback/">Feedback Form</a>
+            </div>
+            <p class="footer-note">&copy; <span id="currentYear"></span> ProwebTools. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <noscript>
+        <p style="margin:18px auto;max-width:900px;padding:0 18px;color:#14385f;font-weight:700;">Enable JavaScript to use live tool search on the homepage.</p>
+    </noscript>
+
+    <script src="tools-menu.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        (function () {
+            const sectionRoot = document.getElementById("toolSections");
+            const searchInput = document.getElementById("toolSearch");
+            const countLabel = document.getElementById("toolCount");
+            const emptyState = document.getElementById("homeEmpty");
+
+            const CATEGORY_RULES = [
+                {
+                    key: "media",
+                    title: "Video and Audio",
+                    note: "Downloaders, playback, conversions, and media workflows.",
+                    test: (label) => /(video|audio|downloader|player|spotify|trimmer|merger|speed changer)/i.test(label)
+                },
+                {
+                    key: "image",
+                    title: "Image and Design",
+                    note: "Thumbnail, format, resize, and visual utility tools.",
+                    test: (label) => /(image|thumbnail|favicon|avif|ico|background|corners|preview)/i.test(label)
+                },
+                {
+                    key: "pdf",
+                    title: "PDF and Documents",
+                    note: "Compress, merge, and optimize PDF files quickly.",
+                    test: (label) => /(pdf)/i.test(label)
+                },
+                {
+                    key: "developer",
+                    title: "Text and Developer Utilities",
+                    note: "Formatting, encoding, generators, and productivity helpers.",
+                    test: () => true
+                }
+            ];
+
+            function toHref(file) {
+                const normalized = (file || "").toLowerCase();
+                if (normalized === "index.html") return "./index.html";
+                return "./" + normalized.replace(/\.html$/i, "") + "/index.html";
+            }
+
+            function shortDescription(label) {
+                if (/thumbnail/i.test(label)) return "YouTube thumbnail fetch and download.";
+                if (/pdf/i.test(label)) return "Quick browser-based PDF processing.";
+                if (/image|favicon|avif|ico|background|corners|resizer/i.test(label)) return "Image optimization and formatting tasks.";
+                if (/video|audio|player|trimmer|merger|spotify|facebook/i.test(label)) return "Media utility workflow in your browser.";
+                if (/json|regex|base64|uuid|case|find|password/i.test(label)) return "Developer-friendly text and data utility.";
+                return "Fast browser-based utility tool.";
+            }
+
+            function groupedTools(tools) {
+                const map = new Map(CATEGORY_RULES.map((rule) => [rule.key, []]));
+                tools.forEach((tool) => {
+                    const rule = CATEGORY_RULES.find((entry) => entry.test(tool.label)) || CATEGORY_RULES[CATEGORY_RULES.length - 1];
+                    map.get(rule.key).push(tool);
+                });
+                return map;
+            }
+
+            function render(tools) {
+                sectionRoot.innerHTML = "";
+                const grouped = groupedTools(tools);
+
+                CATEGORY_RULES.forEach((rule) => {
+                    const items = grouped.get(rule.key) || [];
+                    if (items.length === 0) return;
+
+                    const section = document.createElement("section");
+                    section.className = "tool-section";
+
+                    const title = document.createElement("h2");
+                    title.textContent = rule.title + " (" + items.length + ")";
+                    section.appendChild(title);
+
+                    const note = document.createElement("p");
+                    note.className = "section-note";
+                    note.textContent = rule.note;
+                    section.appendChild(note);
+
+                    const grid = document.createElement("div");
+                    grid.className = "tool-grid";
+
+                    items.forEach((tool) => {
+                        const link = document.createElement("a");
+                        link.className = "tool-link";
+                        link.href = toHref(tool.file);
+                        link.textContent = tool.label;
+
+                        const help = document.createElement("small");
+                        help.textContent = shortDescription(tool.label);
+                        link.appendChild(help);
+                        grid.appendChild(link);
+                    });
+
+                    section.appendChild(grid);
+                    sectionRoot.appendChild(section);
+                });
+
+                countLabel.textContent = tools.length + " tools";
+                emptyState.classList.toggle("hidden", tools.length > 0);
+            }
+
+            const allTools = (typeof TOOL_LINKS !== "undefined" ? TOOL_LINKS : [])
+                .filter((tool) => tool.file !== "index.html")
+                .sort((a, b) => a.label.localeCompare(b.label));
+
+            const params = new URLSearchParams(window.location.search);
+            const initialQuery = (params.get("q") || "").trim();
+            if (initialQuery) {
+                searchInput.value = initialQuery;
+            }
+
+            function applySearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                const visible = allTools.filter((tool) => tool.label.toLowerCase().includes(query));
+                render(visible);
+
+                const nextUrl = new URL(window.location.href);
+                if (query) {
+                    nextUrl.searchParams.set("q", query);
+                } else {
+                    nextUrl.searchParams.delete("q");
+                }
+                history.replaceState({}, "", nextUrl.pathname + nextUrl.search);
+            }
+
+            searchInput.addEventListener("input", applySearch);
+            render(allTools);
+            if (initialQuery) {
+                applySearch();
+            }
+
+            document.getElementById("currentYear").textContent = String(new Date().getFullYear());
+        })();
+    </script>
+</body>
+</html>
+
+
