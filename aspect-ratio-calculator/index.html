@@ -1,0 +1,883 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspect Ratio Calculator Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Calculate proportional width and height values for any aspect ratio with presets.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How to calculate aspect ratio online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Enter any 3 values and the calculator auto-fills the 4th value. W1 is first width, H1 is first height, W2 is second width, and H2 is second height."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I resize an image without changing aspect ratio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Enter the original width and height in one pair, then enter one target value in the other pair. The missing value is calculated automatically to preserve proportions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is 16:9, 4:3, 1:1, and 9:16 aspect ratio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "These are common width-to-height shapes. For example, 1920x1080 is 16:9, 1024x768 is 4:3, 1080x1080 is 1:1, and 1080x1920 is 9:16."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Strech to aspect ratio do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It forces the preview image to fill the frame completely, which can distort the image. Turn it off to keep natural crop-style preview."
+          }
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" type="image/svg+xml" href="../favicon-aspect-ratio-calculator.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg,#fff 0%,#e8edf4 100%);
+        }
+
+        .ar-eq-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+            gap: 10px;
+            align-items: center;
+        }
+
+        .ar-col {
+            display: grid;
+            gap: 10px;
+        }
+
+        .ar-divider {
+            height: 2px;
+            border-radius: 999px;
+            background: rgba(132, 172, 214, .55);
+        }
+
+        .ar-equals {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f4f82;
+            margin-top: 34px;
+        }
+
+        .ar-stepper {
+            position: relative;
+        }
+
+        .ar-stepper input {
+            padding-right: 40px;
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(226,239,255,.9) 100%);
+            color: #103a66;
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 10px rgba(36,92,156,.12);
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .ar-stepper input::-webkit-outer-spin-button,
+        .ar-stepper input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .ar-stepper input:focus {
+            box-shadow: 0 0 0 3px rgba(66,146,234,.22), inset 0 1px 0 rgba(255,255,255,.92);
+        }
+
+        .ar-stepper input.is-computed {
+            background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(226,239,255,.9) 100%);
+            border-color: #8fb3d8;
+            color: #103a66;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 4px 10px rgba(36,92,156,.16);
+        }
+
+        .ar-spin {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border: 1px solid #7ca6d8;
+            border-radius: 9px;
+            background: linear-gradient(180deg, #3f78b5 0%, #2a5f9a 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ar-spin button {
+            width: 100%;
+            flex: 1;
+            border: 0;
+            margin: 0;
+            padding: 0;
+            color: #dbeaff;
+            background: transparent;
+            text-shadow: none;
+            font-size: 11px;
+            line-height: 1;
+            border-radius: 0;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ar-spin button + button {
+            border-top: 1px solid rgba(255,255,255,.25);
+        }
+
+        .ar-spin button:hover {
+            filter: brightness(1.08);
+        }
+
+        .ar-panel {
+            margin-top: 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .ar-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(360px, 480px);
+            grid-template-areas:
+                "inputs side"
+                "under side";
+            gap: 16px;
+            align-items: start;
+        }
+
+        .ar-left {
+            grid-area: inputs;
+            min-width: 0;
+        }
+
+        .ar-under {
+            grid-area: under;
+            display: grid;
+            gap: 12px;
+            align-content: start;
+            min-width: 0;
+        }
+
+        .ar-side {
+            grid-area: side;
+            display: grid;
+            gap: 7px;
+            align-content: start;
+            align-self: stretch;
+        }
+
+        .ar-preset-select {
+            position: relative;
+        }
+
+        .ar-preset-trigger {
+            width: 100%;
+            border: 1px solid #86afd8;
+            border-radius: 11px;
+            background: linear-gradient(180deg, #ffffff 0%, #e9f3ff 100%);
+            color: #0f305a;
+            font-size: 1rem;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+
+        .ar-preset-list {
+            margin-top: 8px;
+            max-height: 270px;
+            overflow: auto;
+            border: 1px solid #86afd8;
+            border-radius: 10px;
+            background: rgba(13, 45, 79, .96);
+            scrollbar-width: thin;
+            scrollbar-color: #4f97da rgba(12, 36, 64, .95);
+        }
+
+        .ar-preset-list[hidden] {
+            display: none;
+        }
+
+        .ar-preset-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .ar-preset-list::-webkit-scrollbar-track {
+            background: rgba(12, 36, 64, .95);
+            border-left: 1px solid rgba(98, 146, 198, .35);
+        }
+
+        .ar-preset-list::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            border: 2px solid rgba(12, 36, 64, .95);
+            background: linear-gradient(180deg, #73b6f1 0%, #3f86cb 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+        }
+
+        .ar-preset-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #8cc7f7 0%, #4f97da 100%);
+        }
+
+        .ar-preset-item {
+            padding: 8px 12px;
+            color: #e8f3ff;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: text;
+        }
+
+        .ar-preset-item:hover,
+        .ar-preset-item.is-active {
+            background: rgba(46, 124, 206, .85);
+        }
+
+        .ar-checkbox-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.2;
+            margin: 0;
+            width: auto;
+        }
+
+        .ar-checkbox-row input[type="checkbox"] {
+            width: auto;
+            height: auto;
+            padding: 0;
+            border: 0;
+            box-shadow: none;
+            appearance: auto;
+            margin: 0;
+            position: relative;
+            top: 0;
+            flex: 0 0 auto;
+        }
+
+        .ar-inline-label {
+            display: inline;
+            margin: 0;
+            font-weight: 700;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .ar-summary {
+            margin-top: 0;
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,.45);
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .status,
+        .ar-summary p {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .ar-upload-zone {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px dashed #7faad6;
+            border-radius: 10px;
+            padding: 16px 12px;
+            min-height: 88px;
+            text-align: center;
+            color: #1a4a7a;
+            font-weight: 700;
+            background: linear-gradient(180deg, rgba(241, 248, 255, .95) 0%, rgba(223, 238, 255, .92) 100%);
+            cursor: pointer;
+            transition: border-color .18s ease, background .18s ease, transform .15s ease;
+            user-select: text;
+            margin-bottom: 12px;
+        }
+
+        .ar-upload-zone:hover {
+            border-color: #5f95cd;
+            transform: translateY(-1px);
+        }
+
+        .ar-upload-zone.is-dragover {
+            border-color: #3f86cb;
+            background: linear-gradient(180deg, rgba(218, 237, 255, .98) 0%, rgba(202, 228, 255, .95) 100%);
+        }
+
+        .ar-upload-zone small {
+            display: block;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #2a6298;
+        }
+
+        .ar-example {
+            width: min(480px, 100%);
+            height: 270px;
+            max-width: 100%;
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            background: rgba(255,255,255,.34);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            transition: width .18s ease, height .18s ease;
+        }
+
+        .ar-example-wrap {
+            position: relative;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .ar-example-wrap:fullscreen,
+        .ar-example-wrap:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: grid;
+            place-items: center;
+            background:
+                radial-gradient(1200px 500px at 50% -10%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 60%),
+                radial-gradient(900px 600px at 12% 120%, rgba(65, 124, 199, 0.18), rgba(65, 124, 199, 0) 70%),
+                radial-gradient(1100px 640px at 90% 95%, rgba(88, 159, 245, 0.2), rgba(88, 159, 245, 0) 72%),
+                linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 52%, var(--bg-bottom) 100%);
+        }
+
+        .ar-example-wrap:fullscreen .ar-example,
+        .ar-example-wrap:-webkit-full-screen .ar-example {
+            max-width: calc(100vw - 40px);
+            max-height: calc(100vh - 40px);
+        }
+
+        .ar-eye-toggle {
+            all: unset;
+            box-sizing: border-box;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            z-index: 3;
+            width: 48px;
+            height: 48px;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            backdrop-filter: none;
+            color: #eff6ff;
+            text-shadow: 0 1px 4px rgba(0,0,0,.45);
+            box-shadow: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .2s ease;
+            opacity: .92;
+        }
+
+        .ar-eye-toggle:hover {
+            transform: translateY(-1px);
+            opacity: 1;
+        }
+
+        .ar-eye-toggle svg {
+            width: 34px;
+            height: 34px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .ar-eye-toggle:focus,
+        .ar-eye-toggle:focus-visible,
+        .ar-eye-toggle:active {
+            outline: none;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .ar-eye-toggle .icon-eye {
+            display: none;
+        }
+
+        .ar-eye-toggle .icon-eye-off {
+            display: block;
+        }
+
+        .ar-eye-toggle[aria-pressed="true"] .icon-eye {
+            display: block;
+        }
+
+        .ar-eye-toggle[aria-pressed="true"] .icon-eye-off {
+            display: none;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .ar-sample {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: none;
+            border: 1px solid rgba(113, 164, 220, .75);
+            border-radius: 11px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(24, 73, 124, .25);
+            background: #adcbe6;
+        }
+
+        .ar-sample-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .ar-sample-caption {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 5px 7px;
+            border-radius: 7px;
+            background: rgba(7, 31, 53, .58);
+            color: #f2f8ff;
+            font-size: clamp(9px, 1.25vw, 12px);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .ar-sample-caption span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ar-sample[hidden] {
+            display: none;
+        }
+
+        .ar-note {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .ar-fit-toggle {
+            margin-top: 8px;
+        }
+
+        .ar-help {
+            margin-top: 14px;
+        }
+
+        .ar-help h2 {
+            margin: 0 0 10px;
+            color: #143f6b;
+            font-size: 1.1rem;
+        }
+
+        #arReset {
+            border-color: #9f2a2f;
+            background: linear-gradient(180deg, #ef5c63 0%, #c53940 100%);
+            color: #ffffff;
+            box-shadow: inset 0 1px 0 rgba(255, 212, 216, .55), 0 3px 10px rgba(122, 24, 32, .34);
+        }
+
+        #arReset:hover {
+            filter: brightness(1.06);
+        }
+
+        .ar-help-list {
+            margin: 0 0 12px;
+            padding-left: 18px;
+            color: #1a4a7a;
+            font-weight: 600;
+        }
+
+        .ar-help-list li + li {
+            margin-top: 6px;
+        }
+
+        .ar-faq details {
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,.4);
+        }
+
+        .ar-faq details + details {
+            margin-top: 8px;
+        }
+
+        .ar-faq summary {
+            cursor: pointer;
+            font-weight: 700;
+            color: #143f6b;
+        }
+
+        .ar-faq p {
+            margin: 8px 0 0;
+            color: #1a4a7a;
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .ar-divider {
+            background: rgba(95, 130, 170, .68);
+        }
+
+        [data-theme="dark"] .ar-equals {
+            color: #b8d4f4;
+        }
+
+        [data-theme="dark"] .ar-stepper input {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, rgba(38,63,94,.92) 0%, rgba(28,47,72,.92) 100%);
+            color: #dbeaff;
+            box-shadow: inset 0 1px 0 rgba(177,209,245,.15), 0 6px 14px rgba(0,0,0,.25);
+        }
+
+        [data-theme="dark"] .ar-stepper input.is-computed {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, rgba(38,63,94,.92) 0%, rgba(28,47,72,.92) 100%);
+            color: #dbeaff;
+            box-shadow: inset 0 1px 0 rgba(177,209,245,.15), 0 6px 14px rgba(0,0,0,.25);
+        }
+
+        [data-theme="dark"] .ar-preset-trigger {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, rgba(38,63,94,.92) 0%, rgba(28,47,72,.92) 100%);
+            color: #dbeaff;
+            box-shadow: inset 0 1px 0 rgba(177,209,245,.15);
+        }
+
+        [data-theme="dark"] .ar-preset-list {
+            border-color: #4f73a0;
+            background: rgba(9, 25, 44, .98);
+            scrollbar-color: #5ba5ea rgba(8, 22, 39, .98);
+        }
+
+        [data-theme="dark"] .ar-preset-list::-webkit-scrollbar-track {
+            background: rgba(8, 22, 39, .98);
+            border-left-color: rgba(104, 145, 186, .38);
+        }
+
+        [data-theme="dark"] .ar-preset-list::-webkit-scrollbar-thumb {
+            border-color: rgba(8, 22, 39, .98);
+            background: linear-gradient(180deg, #7fc0f7 0%, #4d92d4 100%);
+        }
+
+        [data-theme="dark"] .ar-stepper input:focus {
+            box-shadow: 0 0 0 3px rgba(98,168,246,.22), inset 0 1px 0 rgba(177,209,245,.18);
+        }
+
+        [data-theme="dark"] .ar-spin {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, #2f4c71 0%, #223a59 100%);
+        }
+
+        [data-theme="dark"] .ar-summary {
+            background: rgba(10, 24, 46, .5);
+            border-color: #3f618c;
+        }
+
+        [data-theme="dark"] .ar-upload-zone {
+            border-color: #4f79a8;
+            color: #d8ebff;
+            background: linear-gradient(180deg, rgba(25, 47, 73, .95) 0%, rgba(18, 36, 58, .95) 100%);
+        }
+
+        [data-theme="dark"] .ar-upload-zone.is-dragover {
+            border-color: #6aa9e4;
+            background: linear-gradient(180deg, rgba(34, 61, 91, .98) 0%, rgba(25, 47, 73, .98) 100%);
+        }
+
+        [data-theme="dark"] .ar-upload-zone small {
+            color: #aecded;
+        }
+
+        [data-theme="dark"] .ar-example {
+            border-color: #4f73a0;
+            background: rgba(15, 30, 49, .65);
+        }
+
+        [data-theme="dark"] .ar-eye-toggle {
+            color: #f5faff;
+        }
+
+        [data-theme="dark"] .ar-eye-toggle:hover {
+            opacity: 1;
+        }
+
+        [data-theme="dark"] .ar-sample {
+            border-color: rgba(122, 172, 228, .75);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, .36);
+            background: #6987a3;
+        }
+
+        [data-theme="dark"] .ar-sample-caption {
+            background: rgba(3, 16, 30, .7);
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .ar-help h2,
+        [data-theme="dark"] .ar-help-list,
+        [data-theme="dark"] .ar-faq summary,
+        [data-theme="dark"] .ar-faq p {
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] #arReset {
+            border-color: #b84b55;
+            background: linear-gradient(180deg, #dc5b66 0%, #9f3039 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 200, 205, .35), 0 4px 12px rgba(0, 0, 0, .35);
+        }
+
+        [data-theme="dark"] .ar-faq details {
+            border-color: #4f73a0;
+            background: rgba(14, 30, 51, .58);
+        }
+
+        @media (max-width: 740px) {
+            .ar-layout {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "inputs"
+                    "under"
+                    "side";
+            }
+            .ar-eq-grid {
+                grid-template-columns: 1fr;
+            }
+            .ar-equals {
+                margin-top: 0;
+            }
+        }
+
+        .faq-item ul {
+            margin: 0;
+            padding: 0 12px 12px 32px;
+        }
+
+        .faq-item li + li {
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Aspect Ratio Calculator</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Fill any 3 values (W1, H1, W2, H2) and the 4th one is calculated automatically.</p>
+
+        <section class="card">
+            <div id="arUploadZone" class="ar-upload-zone" role="button" tabindex="0" aria-label="Upload preview image">
+                Drag and drop image here
+                <small>or click to choose image</small>
+            </div>
+            <input id="arImageInput" type="file" accept="image/*" hidden>
+
+            <div class="ar-layout">
+            <div class="ar-left">
+            <div class="ar-eq-grid">
+                <div class="ar-col">
+                    <div>
+                        <label for="arW1">W<sub>1</sub></label>
+                        <div class="ar-stepper">
+                            <input id="arW1" type="number" min="1" placeholder="e.g. 1920">
+                            <div class="ar-spin">
+                                <button type="button" data-step-target="arW1" data-step-dir="up" aria-label="Increase W1">&#9650;</button>
+                                <button type="button" data-step-target="arW1" data-step-dir="down" aria-label="Decrease W1">&#9660;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ar-divider" aria-hidden="true"></div>
+                    <div>
+                        <label for="arH1">H<sub>1</sub></label>
+                        <div class="ar-stepper">
+                            <input id="arH1" type="number" min="1" placeholder="e.g. 1080">
+                            <div class="ar-spin">
+                                <button type="button" data-step-target="arH1" data-step-dir="up" aria-label="Increase H1">&#9650;</button>
+                                <button type="button" data-step-target="arH1" data-step-dir="down" aria-label="Decrease H1">&#9660;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ar-equals" aria-hidden="true">=</div>
+
+                <div class="ar-col">
+                    <div>
+                        <label for="arW2">W<sub>2</sub></label>
+                        <div class="ar-stepper">
+                            <input id="arW2" type="number" min="1" placeholder="e.g. 1280">
+                            <div class="ar-spin">
+                                <button type="button" data-step-target="arW2" data-step-dir="up" aria-label="Increase W2">&#9650;</button>
+                                <button type="button" data-step-target="arW2" data-step-dir="down" aria-label="Decrease W2">&#9660;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ar-divider" aria-hidden="true"></div>
+                    <div>
+                        <label for="arH2">H<sub>2</sub></label>
+                        <div class="ar-stepper">
+                            <input id="arH2" type="number" min="1" placeholder="e.g. 720">
+                            <div class="ar-spin">
+                                <button type="button" data-step-target="arH2" data-step-dir="up" aria-label="Increase H2">&#9650;</button>
+                                <button type="button" data-step-target="arH2" data-step-dir="down" aria-label="Decrease H2">&#9660;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="ar-under">
+            <div class="ar-panel">
+                <div>
+                    <label for="arPresetTrigger">Common ratios:</label>
+                    <div class="ar-preset-select">
+                        <button id="arPresetTrigger" class="ar-preset-trigger" type="button" aria-expanded="false">Select a ratio preset</button>
+                        <div id="arPresetList" class="ar-preset-list" hidden></div>
+                    </div>
+                </div>
+
+                <label class="ar-checkbox-row"><input id="arRound" type="checkbox" checked> Round results to the nearest whole number</label>
+            </div>
+
+            <p id="arStatus" class="status" aria-live="polite">Enter any 3 values to calculate the missing one.</p>
+
+            <div class="ar-summary">
+                <p id="arResult" class="note" style="margin:0;">Result: --</p>
+                <p id="arSimple" class="ar-note" style="margin:8px 0 0;">Your aspect ratio is: --</p>
+            </div>
+            </div>
+
+            <div class="ar-side">
+            <div class="ar-checkbox-row ar-fit-toggle">
+                <input id="arFitImage" type="checkbox">
+                <label for="arFitImage" class="ar-inline-label">Strech to aspect ratio</label>
+            </div>
+            <div>
+                <div class="ar-example-wrap">
+                    <button id="arShowSample" class="ar-eye-toggle" type="button" aria-label="Toggle sample image" aria-pressed="false">
+                        <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 3l18 18"></path>
+                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                            <path d="M9.9 5.2A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16.4 16.4 0 0 1-4.1 4.8"></path>
+                            <path d="M6.2 6.2A16.9 16.9 0 0 0 2 12s3.5 7 10 7a10.8 10.8 0 0 0 4-.8"></path>
+                        </svg>
+                        <span class="sr-only">Toggle sample image</span>
+                    </button>
+                    <div id="arExampleBox" class="ar-example">
+                        <span id="arExampleText">Example</span>
+                        <div id="arSample" class="ar-sample" hidden>
+                            <img
+                                class="ar-sample-image"
+                                src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=100"
+                                srcset="
+                                    https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=100 1600w,
+                                    https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=100 2400w,
+                                    https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3200&q=100 3200w,
+                                    https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=4000&q=100 4000w
+                                "
+                                sizes="(max-width: 740px) 92vw, 460px"
+                                alt="Ultra realistic nature landscape with mountains, forest, and lake"
+                                loading="lazy"
+                            >
+                            <div class="ar-sample-caption">
+                                <span id="arSampleRatio">16:9</span>
+                                <span id="arSampleSize">1600 x 900</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="convert-actions">
+                <button id="arSwap" type="button" class="download-btn">Swap Ratio Sides</button>
+                <button id="arReset" type="button" class="download-btn">Reset</button>
+            </div>
+            </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../aspect-ratio-calculator.js"></script>
+</body>
+</html>
+
+

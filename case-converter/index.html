@@ -1,0 +1,527 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Converter Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Convert text case instantly with sentence, lower, upper, capitalized, inverse, and alternating styles.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-case-converter.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg,#fff 0%,#e8edf4 100%);
+        }
+
+        .cc-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cc-lang-native {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            pointer-events: none;
+        }
+
+        .cc-lang-picker {
+            position: relative;
+        }
+
+        .cc-lang-trigger {
+            min-width: 220px;
+            max-width: 280px;
+            height: 40px;
+            border: 1px solid #86afd8;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(232,243,255,.93) 100%);
+            color: #103a66;
+            text-shadow: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-start;
+            font-size: .88rem;
+            font-weight: 700;
+        }
+
+        .cc-lang-trigger .caret {
+            margin-left: auto;
+            opacity: .8;
+        }
+
+        .cc-lang-flag {
+            width: 20px;
+            height: 14px;
+            border-radius: 2px;
+            flex: 0 0 auto;
+            object-fit: cover;
+            box-shadow: 0 0 0 1px rgba(0,0,0,.2);
+            background: #dce9fa;
+        }
+
+        .cc-lang-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .cc-lang-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            z-index: 80;
+            width: min(320px, calc(100vw - 28px));
+            max-height: 280px;
+            overflow: auto;
+            border: 1px solid #86afd8;
+            border-radius: 10px;
+            background: rgba(13, 45, 79, .98);
+            padding: 6px;
+            box-shadow: 0 10px 20px rgba(20, 58, 102, .35);
+            scrollbar-width: thin;
+            scrollbar-color: #4f97da rgba(12, 36, 64, .95);
+        }
+
+        .cc-lang-menu[hidden] {
+            display: none;
+        }
+
+        .cc-lang-option {
+            width: 100%;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #e8f3ff;
+            text-shadow: none;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: .88rem;
+            font-weight: 700;
+        }
+
+        .cc-lang-option:hover,
+        .cc-lang-option.is-active {
+            background: rgba(46, 124, 206, .85);
+        }
+
+        .cc-lang-menu::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .cc-lang-menu::-webkit-scrollbar-track {
+            background: rgba(12, 36, 64, .95);
+            border-left: 1px solid rgba(98, 146, 198, .35);
+        }
+
+        .cc-lang-menu::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            border: 2px solid rgba(12, 36, 64, .95);
+            background: linear-gradient(180deg, #73b6f1 0%, #3f86cb 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+        }
+
+        .cc-pill {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #86afd8;
+            border-radius: 999px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255,255,255,.93) 0%, rgba(232,243,255,.93) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+        }
+
+        .cc-pill-btn {
+            border: 0;
+            border-right: 1px solid rgba(128,170,214,.55);
+            border-radius: 0;
+            background: transparent;
+            color: #113a67;
+            box-shadow: none;
+            text-shadow: none;
+            min-width: 36px;
+            height: 32px;
+            padding: 0 10px;
+            font-weight: 800;
+        }
+
+        .cc-pill-btn:last-child {
+            border-right: 0;
+        }
+
+        .cc-pill-btn.is-active {
+            background: linear-gradient(180deg, #4f95e4 0%, #2a6fbe 100%);
+            color: #ffffff;
+        }
+
+        .cc-size-value {
+            min-width: 44px;
+            text-align: center;
+            font-weight: 800;
+            color: #103a66;
+            padding: 0 6px;
+            line-height: 32px;
+            user-select: text;
+        }
+
+        .cc-spacer {
+            flex: 1 1 auto;
+        }
+
+        .cc-continue {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .cc-continue input {
+            width: auto;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+            appearance: auto;
+        }
+
+        .cc-textarea {
+            width: 100%;
+            min-height: 500px;
+            resize: vertical;
+            font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+            line-height: 1.6;
+            scrollbar-width: thin;
+            scrollbar-color: #4f97da rgba(12, 36, 64, .95);
+        }
+
+        .cc-textarea::-webkit-scrollbar,
+        .tools-menu-panel::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .cc-textarea::-webkit-scrollbar-track,
+        .tools-menu-panel::-webkit-scrollbar-track {
+            background: rgba(12, 36, 64, .95);
+            border-left: 1px solid rgba(98, 146, 198, .35);
+        }
+
+        .cc-textarea::-webkit-scrollbar-thumb,
+        .tools-menu-panel::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            border: 2px solid rgba(12, 36, 64, .95);
+            background: linear-gradient(180deg, #73b6f1 0%, #3f86cb 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+        }
+
+        .cc-textarea::-webkit-scrollbar-thumb:hover,
+        .tools-menu-panel::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #8cc7f7 0%, #4f97da 100%);
+        }
+
+        .cc-meta {
+            margin: 8px 0 0;
+            font-weight: 700;
+            color: #6f91b8;
+        }
+
+        .cc-actions {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .cc-actions button {
+            min-height: 44px;
+        }
+
+        .cc-bottom {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        #ccDownload {
+            border-color: #c9830d;
+            background: linear-gradient(180deg, #ffbe44 0%, #e59210 100%);
+            color: #ffffff;
+        }
+
+        #ccCopy {
+            border-color: #238b3a;
+            background: linear-gradient(180deg, #53c96d 0%, #2d9e49 100%);
+            color: #ffffff;
+        }
+
+        #ccClear {
+            border-color: #a72635;
+            background: linear-gradient(180deg, #ef5568 0%, #cb2f46 100%);
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .cc-pill {
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #1f3558 0%, #162947 100%);
+            box-shadow: inset 0 1px 0 rgba(176,204,242,.14);
+        }
+
+        [data-theme="dark"] .cc-lang-trigger {
+            border-color: #4b6994;
+            background: linear-gradient(180deg, #1f3558 0%, #162947 100%);
+            color: #d7e9ff;
+        }
+
+        [data-theme="dark"] .cc-lang-menu {
+            border-color: #4f73a0;
+            background: rgba(8, 22, 39, .98);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .46);
+            scrollbar-color: #5ba5ea rgba(8, 22, 39, .98);
+        }
+
+        [data-theme="dark"] .cc-pill-btn {
+            color: #d7e9ff;
+            border-right-color: rgba(98,133,178,.6);
+        }
+
+        [data-theme="dark"] .cc-size-value {
+            color: #dce8ff;
+        }
+
+        [data-theme="dark"] .cc-textarea {
+            color: #e7f1ff;
+            scrollbar-color: #5ba5ea rgba(8, 22, 39, .98);
+        }
+
+        [data-theme="dark"] .cc-textarea::-webkit-scrollbar-track,
+        [data-theme="dark"] .tools-menu-panel::-webkit-scrollbar-track {
+            background: rgba(8, 22, 39, .98);
+            border-left-color: rgba(104, 145, 186, .38);
+        }
+
+        [data-theme="dark"] .cc-textarea::-webkit-scrollbar-thumb,
+        [data-theme="dark"] .tools-menu-panel::-webkit-scrollbar-thumb {
+            border-color: rgba(8, 22, 39, .98);
+            background: linear-gradient(180deg, #7fc0f7 0%, #4d92d4 100%);
+        }
+
+        [data-theme="dark"] .cc-meta {
+            color: #a9c6e9;
+        }
+
+        [data-theme="dark"] #ccDownload {
+            border-color: #d19635;
+            background: linear-gradient(180deg, #e6a93b 0%, #ba7811 100%);
+        }
+
+        [data-theme="dark"] #ccCopy {
+            border-color: #33a452;
+            background: linear-gradient(180deg, #4fbf68 0%, #2f8f45 100%);
+        }
+
+        [data-theme="dark"] #ccClear {
+            border-color: #c04c5d;
+            background: linear-gradient(180deg, #de5f73 0%, #a73547 100%);
+        }
+
+        @media (max-width: 920px) {
+            .cc-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .cc-bottom {
+                grid-template-columns: 1fr;
+            }
+            .cc-textarea {
+                min-height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+    <div class="headline-bar">
+        <h1>Case Converter</h1>
+        <div class="tools-group">
+            <div class="cc-lang-picker">
+                <select id="ccLanguage" class="cc-lang-native" aria-label="Select writing language">
+                    <option value="en-US" data-dir="ltr">English (United States)</option>
+                    <option value="en-GB" data-dir="ltr">English (United Kingdom)</option>
+                    <option value="es-ES" data-dir="ltr">Spanish (Spain)</option>
+                    <option value="es-MX" data-dir="ltr">Spanish (Mexico)</option>
+                    <option value="pt-BR" data-dir="ltr">Portuguese (Brazil)</option>
+                    <option value="pt-PT" data-dir="ltr">Portuguese (Portugal)</option>
+                    <option value="fr-FR" data-dir="ltr">French (France)</option>
+                    <option value="de-DE" data-dir="ltr">German (Germany)</option>
+                    <option value="nl-NL" data-dir="ltr">Dutch (Netherlands)</option>
+                    <option value="sv-SE" data-dir="ltr">Swedish (Sweden)</option>
+                    <option value="no-NO" data-dir="ltr">Norwegian (Norway)</option>
+                    <option value="da-DK" data-dir="ltr">Danish (Denmark)</option>
+                    <option value="fi-FI" data-dir="ltr">Finnish (Finland)</option>
+                    <option value="pl-PL" data-dir="ltr">Polish (Poland)</option>
+                    <option value="cs-CZ" data-dir="ltr">Czech (Czechia)</option>
+                    <option value="sk-SK" data-dir="ltr">Slovak (Slovakia)</option>
+                    <option value="sl-SI" data-dir="ltr">Slovenian (Slovenia)</option>
+                    <option value="hr-HR" data-dir="ltr">Croatian (Croatia)</option>
+                    <option value="ro-RO" data-dir="ltr">Romanian (Romania)</option>
+                    <option value="hu-HU" data-dir="ltr">Hungarian (Hungary)</option>
+                    <option value="ru-RU" data-dir="ltr">Russian (Russia)</option>
+                    <option value="uk-UA" data-dir="ltr">Ukrainian (Ukraine)</option>
+                    <option value="bg-BG" data-dir="ltr">Bulgarian (Bulgaria)</option>
+                    <option value="el-GR" data-dir="ltr">Greek (Greece)</option>
+                    <option value="lt-LT" data-dir="ltr">Lithuanian (Lithuania)</option>
+                    <option value="lv-LV" data-dir="ltr">Latvian (Latvia)</option>
+                    <option value="et-EE" data-dir="ltr">Estonian (Estonia)</option>
+                    <option value="is-IS" data-dir="ltr">Icelandic (Iceland)</option>
+                    <option value="sq-AL" data-dir="ltr">Albanian (Albania)</option>
+                    <option value="az-AZ" data-dir="ltr">Azerbaijani (Azerbaijan)</option>
+                    <option value="id-ID" data-dir="ltr">Indonesian (Indonesia)</option>
+                    <option value="ms-MY" data-dir="ltr">Malay (Malaysia)</option>
+                    <option value="vi-VN" data-dir="ltr">Vietnamese (Vietnam)</option>
+                    <option value="tl-PH" data-dir="ltr">Filipino (Philippines)</option>
+                    <option value="ca-ES" data-dir="ltr">Catalan (Spain)</option>
+                    <option value="tr-TR" data-dir="ltr">Turkish (Turkey)</option>
+                    <option value="it-IT" data-dir="ltr">Italian (Italy)</option>
+                </select>
+                <button id="ccLangTrigger" class="cc-lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <img id="ccLangFlag" class="cc-lang-flag" src="https://flagcdn.com/w20/us.png" alt="US flag">
+                    <span id="ccLangLabel" class="cc-lang-label">English (United States)</span>
+                    <span class="caret">v</span>
+                </button>
+                <div id="ccLangMenu" class="cc-lang-menu" role="listbox" hidden>
+                    <button type="button" class="cc-lang-option is-active" data-value="en-US" data-dir="ltr" data-country="us">US English (United States)</button>
+                    <button type="button" class="cc-lang-option" data-value="en-GB" data-dir="ltr" data-country="gb">GB English (United Kingdom)</button>
+                    <button type="button" class="cc-lang-option" data-value="es-ES" data-dir="ltr" data-country="es">ES Spanish (Spain)</button>
+                    <button type="button" class="cc-lang-option" data-value="es-MX" data-dir="ltr" data-country="mx">MX Spanish (Mexico)</button>
+                    <button type="button" class="cc-lang-option" data-value="pt-BR" data-dir="ltr" data-country="br">BR Portuguese (Brazil)</button>
+                    <button type="button" class="cc-lang-option" data-value="pt-PT" data-dir="ltr" data-country="pt">PT Portuguese (Portugal)</button>
+                    <button type="button" class="cc-lang-option" data-value="fr-FR" data-dir="ltr" data-country="fr">FR French (France)</button>
+                    <button type="button" class="cc-lang-option" data-value="de-DE" data-dir="ltr" data-country="de">DE German (Germany)</button>
+                    <button type="button" class="cc-lang-option" data-value="nl-NL" data-dir="ltr" data-country="nl">NL Dutch (Netherlands)</button>
+                    <button type="button" class="cc-lang-option" data-value="sv-SE" data-dir="ltr" data-country="se">SE Swedish (Sweden)</button>
+                    <button type="button" class="cc-lang-option" data-value="no-NO" data-dir="ltr" data-country="no">NO Norwegian (Norway)</button>
+                    <button type="button" class="cc-lang-option" data-value="da-DK" data-dir="ltr" data-country="dk">DK Danish (Denmark)</button>
+                    <button type="button" class="cc-lang-option" data-value="fi-FI" data-dir="ltr" data-country="fi">FI Finnish (Finland)</button>
+                    <button type="button" class="cc-lang-option" data-value="pl-PL" data-dir="ltr" data-country="pl">PL Polish (Poland)</button>
+                    <button type="button" class="cc-lang-option" data-value="cs-CZ" data-dir="ltr" data-country="cz">CZ Czech (Czechia)</button>
+                    <button type="button" class="cc-lang-option" data-value="sk-SK" data-dir="ltr" data-country="sk">SK Slovak (Slovakia)</button>
+                    <button type="button" class="cc-lang-option" data-value="sl-SI" data-dir="ltr" data-country="si">SI Slovenian (Slovenia)</button>
+                    <button type="button" class="cc-lang-option" data-value="hr-HR" data-dir="ltr" data-country="hr">HR Croatian (Croatia)</button>
+                    <button type="button" class="cc-lang-option" data-value="ro-RO" data-dir="ltr" data-country="ro">RO Romanian (Romania)</button>
+                    <button type="button" class="cc-lang-option" data-value="hu-HU" data-dir="ltr" data-country="hu">HU Hungarian (Hungary)</button>
+                    <button type="button" class="cc-lang-option" data-value="ru-RU" data-dir="ltr" data-country="ru">RU Russian (Russia)</button>
+                    <button type="button" class="cc-lang-option" data-value="uk-UA" data-dir="ltr" data-country="ua">UA Ukrainian (Ukraine)</button>
+                    <button type="button" class="cc-lang-option" data-value="bg-BG" data-dir="ltr" data-country="bg">BG Bulgarian (Bulgaria)</button>
+                    <button type="button" class="cc-lang-option" data-value="el-GR" data-dir="ltr" data-country="gr">GR Greek (Greece)</button>
+                    <button type="button" class="cc-lang-option" data-value="lt-LT" data-dir="ltr" data-country="lt">LT Lithuanian (Lithuania)</button>
+                    <button type="button" class="cc-lang-option" data-value="lv-LV" data-dir="ltr" data-country="lv">LV Latvian (Latvia)</button>
+                    <button type="button" class="cc-lang-option" data-value="et-EE" data-dir="ltr" data-country="ee">EE Estonian (Estonia)</button>
+                    <button type="button" class="cc-lang-option" data-value="is-IS" data-dir="ltr" data-country="is">IS Icelandic (Iceland)</button>
+                    <button type="button" class="cc-lang-option" data-value="sq-AL" data-dir="ltr" data-country="al">AL Albanian (Albania)</button>
+                    <button type="button" class="cc-lang-option" data-value="az-AZ" data-dir="ltr" data-country="az">AZ Azerbaijani (Azerbaijan)</button>
+                    <button type="button" class="cc-lang-option" data-value="id-ID" data-dir="ltr" data-country="id">ID Indonesian (Indonesia)</button>
+                    <button type="button" class="cc-lang-option" data-value="ms-MY" data-dir="ltr" data-country="my">MY Malay (Malaysia)</button>
+                    <button type="button" class="cc-lang-option" data-value="vi-VN" data-dir="ltr" data-country="vn">VN Vietnamese (Vietnam)</button>
+                    <button type="button" class="cc-lang-option" data-value="tl-PH" data-dir="ltr" data-country="ph">PH Filipino (Philippines)</button>
+                    <button type="button" class="cc-lang-option" data-value="ca-ES" data-dir="ltr" data-country="es">ES Catalan (Spain)</button>
+                    <button type="button" class="cc-lang-option" data-value="tr-TR" data-dir="ltr" data-country="tr">TR Turkish (Turkey)</button>
+                    <button type="button" class="cc-lang-option" data-value="it-IT" data-dir="ltr" data-country="it">IT Italian (Italy)</button>
+                </div>
+            </div>
+            <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+            </button>
+            <details class="tools-menu">
+                <summary class="tools-menu-trigger">All Tools</summary>
+                <div class="tools-menu-panel"></div>
+            </details>
+        </div>
+    </div>
+
+    <p class="subtitle">Convert text case instantly with live formatting controls and quick actions.</p>
+
+    <section class="card">
+        <div class="cc-toolbar">
+            <div class="cc-pill" role="group" aria-label="Font size controls">
+                <button id="ccFontDec" type="button" class="cc-pill-btn" aria-label="Decrease font size">-</button>
+                <span id="ccFontSizeValue" class="cc-size-value">16</span>
+                <button id="ccFontInc" type="button" class="cc-pill-btn" aria-label="Increase font size">+</button>
+            </div>
+
+            <div class="cc-pill" role="group" aria-label="Style controls">
+                <button id="ccBold" type="button" class="cc-pill-btn" aria-label="Toggle bold">B</button>
+                <button id="ccItalic" type="button" class="cc-pill-btn" aria-label="Toggle italic">/</button>
+            </div>
+
+            <div class="cc-pill" role="group" aria-label="Text alignment">
+                <button type="button" class="cc-pill-btn cc-align is-active" data-align="left">Left</button>
+                <button type="button" class="cc-pill-btn cc-align" data-align="center">Center</button>
+                <button type="button" class="cc-pill-btn cc-align" data-align="right">Right</button>
+            </div>
+
+            <div class="cc-pill" role="group" aria-label="History controls">
+                <button id="ccUndo" type="button" class="cc-pill-btn" aria-label="Undo">&#8630;</button>
+                <button id="ccRedo" type="button" class="cc-pill-btn" aria-label="Redo">&#8631;</button>
+            </div>
+
+            <div class="cc-spacer"></div>
+
+            <label class="cc-continue">
+                <input id="ccContinue" type="checkbox" checked>
+                Continue where I left off
+            </label>
+        </div>
+
+        <textarea id="ccInput" class="cc-textarea" placeholder="Type or paste text here..." wrap="off"></textarea>
+
+        <p id="ccMeta" class="cc-meta">Chars: 0 | Words: 0 | Lines: 0</p>
+
+        <div class="cc-actions">
+            <button type="button" id="ccSentence">Sentence case</button>
+            <button type="button" id="ccLower">lower case</button>
+            <button type="button" id="ccUpper">UPPER CASE</button>
+            <button type="button" id="ccCapitalized">Capitalized Case</button>
+            <button type="button" id="ccInverse">iNVERSE cASE</button>
+            <button type="button" id="ccAlternating">aLtErNaTiNg cAsE</button>
+        </div>
+
+        <div class="cc-bottom">
+            <button type="button" id="ccDownload">Download .txt</button>
+            <button type="button" id="ccCopy">Copy to Clipboard</button>
+            <button type="button" id="ccClear">Clear</button>
+        </div>
+
+        <p id="ccStatus" class="status" aria-live="polite">Ready.</p>
+    </section>
+</main>
+
+<script src="../tools-menu.js"></script>
+<script src="../theme.js"></script>
+<script src="../case-converter.js"></script>
+</body>
+</html>
+
+

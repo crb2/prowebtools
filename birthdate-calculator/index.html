@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthdate Calculator Online Free | Thumbnail Generator Tools</title>
+    <meta name="description" content="Calculate exact age from birth date with years, months, days, total days, and next birthday.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-birthdate-calculator.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg,#fff 0%,#e8edf4 100%);
+        }
+
+        .bd-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .bd-field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .bd-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            font-size: .92rem;
+        }
+
+        .bd-label-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #63abf7 0%, #2b79cd 100%);
+            box-shadow: 0 0 0 2px rgba(90, 159, 232, .2);
+            flex: 0 0 auto;
+        }
+
+        .bd-date-wrap {
+            position: relative;
+            border: 1px solid #8fb3d8;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(232,244,255,.85) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.95),
+                0 6px 14px rgba(30, 88, 152, .14);
+            padding: 2px;
+        }
+
+        .bd-date-wrap input {
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            box-shadow: none;
+            font-weight: 700;
+            letter-spacing: .01em;
+            padding-right: 48px;
+            color: #0d335e;
+            cursor: pointer;
+        }
+
+        .bd-date-btn {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            padding: 0;
+            border: 1px solid #9abbe0;
+            background: linear-gradient(180deg, #ffffff 0%, #dbeeff 100%);
+            color: #12406d;
+            font-size: .95rem;
+            text-shadow: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+        }
+
+        .bd-date-btn:hover {
+            filter: brightness(1.03);
+        }
+
+        .bd-date-wrap input:focus {
+            box-shadow: 0 0 0 3px rgba(66, 146, 234, 0.22);
+        }
+
+        .bd-hint {
+            margin: 0;
+            font-size: .77rem;
+            color: #3a6290;
+            font-weight: 600;
+        }
+
+        .bd-stats {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .bd-stat {
+            border: 1px solid #8fb3d8;
+            border-radius: 10px;
+            padding: 10px;
+            background:
+                radial-gradient(150px 80px at 85% 10%, rgba(91, 170, 247, .22), transparent 65%),
+                linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(235,245,255,.64) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.9),
+                0 6px 14px rgba(36, 92, 156, .12);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .bd-stat:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.9),
+                0 8px 16px rgba(36, 92, 156, .16);
+        }
+
+        [data-theme="dark"] .bd-stat {
+            background:
+                radial-gradient(180px 90px at 88% 12%, rgba(98, 176, 255, .18), transparent 65%),
+                linear-gradient(180deg, rgba(18, 33, 55, .88) 0%, rgba(14, 27, 45, .88) 100%);
+            border-color: #3f618c;
+        }
+
+        [data-theme="dark"] .bd-date-wrap {
+            border-color: #3f618c;
+            background: linear-gradient(180deg, rgba(24,41,66,.86) 0%, rgba(16,31,51,.86) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(178, 210, 247, .15),
+                0 8px 16px rgba(0, 0, 0, .24);
+        }
+
+        [data-theme="dark"] .bd-date-wrap input {
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .bd-date-btn {
+            background: linear-gradient(180deg, #304d72 0%, #223a59 100%);
+            border-color: #4f73a0;
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .bd-hint {
+            color: #9fc2eb;
+        }
+
+        .bd-date-wrap.is-open {
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.95),
+                0 0 0 3px rgba(66, 146, 234, 0.2),
+                0 10px 18px rgba(30, 88, 152, .18);
+        }
+
+        .bd-picker {
+            position: fixed;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: min(320px, calc(100vw - 48px));
+            border: 1px solid #86add5;
+            border-radius: 12px;
+            padding: 10px;
+            background:
+                radial-gradient(220px 90px at 90% 4%, rgba(94,171,245,.25), transparent 70%),
+                linear-gradient(180deg, #f8fcff 0%, #eaf4ff 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.95),
+                0 16px 32px rgba(30, 88, 152, .24);
+        }
+
+        .bd-picker[hidden] {
+            display: none;
+        }
+
+        .bd-picker-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .bd-picker-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bd-picker-title-btn {
+            border: 1px solid #8eb3da;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ffffff 0%, #dcecff 100%);
+            color: #13416f;
+            text-shadow: none;
+            font-size: .9rem;
+            font-weight: 800;
+            letter-spacing: .01em;
+            padding: 5px 9px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+        }
+
+        .bd-picker-title-btn:hover {
+            filter: brightness(1.03);
+        }
+
+        .bd-picker-caption {
+            margin: 0;
+            font-size: .95rem;
+            font-weight: 800;
+            color: #13416f;
+            letter-spacing: .01em;
+        }
+
+        .bd-picker-nav {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            padding: 0;
+            border: 1px solid #8eb3da;
+            background: linear-gradient(180deg, #ffffff 0%, #dcecff 100%);
+            color: #12406d;
+            text-shadow: none;
+        }
+
+        .bd-picker-week,
+        .bd-picker-days {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 4px;
+        }
+
+        .bd-picker-week {
+            margin-bottom: 4px;
+        }
+
+        .bd-picker-week[hidden] {
+            display: none;
+        }
+
+        .bd-picker-days[hidden],
+        .bd-picker-week[hidden],
+        .bd-cell-grid[hidden] {
+            display: none !important;
+        }
+
+        .bd-picker-week span {
+            text-align: center;
+            font-size: .76rem;
+            font-weight: 700;
+            color: #2b5b8b;
+            padding: 4px 0;
+        }
+
+        .bd-day,
+        .bd-cell {
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #113b67;
+            text-shadow: none;
+            box-shadow: none;
+            font-size: .85rem;
+            font-weight: 700;
+            padding: 0;
+        }
+
+        .bd-day:hover,
+        .bd-cell:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #dfefff 100%);
+            border-color: #95b9df;
+            filter: none;
+        }
+
+        .bd-day.is-out {
+            color: #8aa6c3;
+        }
+
+        .bd-day.is-today {
+            border-color: #6da9e3;
+        }
+
+        .bd-day.is-selected,
+        .bd-cell.is-selected {
+            border-color: #1d62af;
+            background: linear-gradient(180deg, #4f95e4 0%, #286fbe 100%);
+            color: #ffffff;
+            box-shadow: inset 0 1px 0 rgba(210, 234, 255, 0.5);
+        }
+
+        .bd-cell-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 6px;
+        }
+
+        .bd-cell-grid.is-year-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            max-height: 248px;
+            overflow-y: auto;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: #5f8fc2 #dcecff;
+        }
+
+        .bd-cell-grid.is-year-grid::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .bd-cell-grid.is-year-grid::-webkit-scrollbar-track {
+            background: linear-gradient(180deg, #eef6ff 0%, #dcecff 100%);
+            border-radius: 999px;
+        }
+
+        .bd-cell-grid.is-year-grid::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7fb2e8 0%, #4b87c5 100%);
+            border-radius: 999px;
+            border: 2px solid #dcecff;
+        }
+
+        .bd-cell {
+            height: 36px;
+        }
+
+        .bd-picker-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(127, 169, 214, .45);
+        }
+
+        .bd-picker-link {
+            border: 0;
+            background: transparent;
+            color: #0f67c4;
+            padding: 2px 4px;
+            border-radius: 6px;
+            box-shadow: none;
+            font-size: .85rem;
+            font-weight: 700;
+            text-shadow: none;
+        }
+
+        .bd-picker-link:hover {
+            background: rgba(23, 113, 210, .1);
+            filter: none;
+        }
+
+        [data-theme="dark"] .bd-picker {
+            border-color: #4f73a0;
+            background:
+                radial-gradient(220px 90px at 90% 4%, rgba(100,175,255,.22), transparent 70%),
+                linear-gradient(180deg, #223c61 0%, #182d4b 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(179, 209, 247, .12),
+                0 16px 32px rgba(0, 0, 0, .38);
+        }
+
+        [data-theme="dark"] .bd-picker-title-btn,
+        [data-theme="dark"] .bd-picker-caption {
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .bd-picker-title-btn {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, #304d72 0%, #223a59 100%);
+        }
+
+        [data-theme="dark"] .bd-picker-week span {
+            color: #b8d4f4;
+        }
+
+        [data-theme="dark"] .bd-picker-nav {
+            border-color: #4f73a0;
+            background: linear-gradient(180deg, #304d72 0%, #223a59 100%);
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .bd-day,
+        [data-theme="dark"] .bd-cell {
+            color: #dbeaff;
+        }
+
+        [data-theme="dark"] .bd-day:hover,
+        [data-theme="dark"] .bd-cell:hover {
+            background: linear-gradient(180deg, #2b496f 0%, #233c5d 100%);
+            border-color: #5d86b4;
+        }
+
+        [data-theme="dark"] .bd-day.is-out {
+            color: #7ea2c8;
+        }
+
+        [data-theme="dark"] .bd-day.is-selected,
+        [data-theme="dark"] .bd-cell.is-selected {
+            border-color: #62a8f6;
+            background: linear-gradient(180deg, #5ca1ef 0%, #2e73c5 100%);
+        }
+
+        [data-theme="dark"] .bd-picker-foot {
+            border-top-color: rgba(95, 131, 174, .55);
+        }
+
+        [data-theme="dark"] .bd-cell-grid.is-year-grid {
+            scrollbar-color: #5a89bc #223a59;
+        }
+
+        [data-theme="dark"] .bd-cell-grid.is-year-grid::-webkit-scrollbar-track {
+            background: linear-gradient(180deg, #2a4467 0%, #223a59 100%);
+        }
+
+        [data-theme="dark"] .bd-cell-grid.is-year-grid::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #73ace8 0%, #3d78bb 100%);
+            border-color: #223a59;
+        }
+
+        [data-theme="dark"] .bd-picker-link {
+            color: #7fc2ff;
+        }
+
+        .bd-key {
+            margin: 0;
+            font-size: .82rem;
+            opacity: .86;
+        }
+
+        .bd-value {
+            margin: 5px 0 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 680px) {
+            .bd-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bd-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Birthdate Calculator</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <p class="subtitle">Find your exact age, total days lived, and next birthday in one click.</p>
+
+        <section class="card">
+            <div class="bd-grid">
+                <div class="bd-field">
+                    <label for="bdBirth" class="bd-label"><span class="bd-label-dot" aria-hidden="true"></span>Birth Date</label>
+                    <div class="bd-date-wrap" data-date-wrap>
+                        <input id="bdBirth" type="text" inputmode="numeric" placeholder="DD-MM-YYYY">
+                        <button type="button" class="bd-date-btn" data-date-open aria-label="Open birth date calendar">&#128197;</button>
+                    </div>
+                    <p class="bd-hint">Type date like 01-12-2000 or use calendar</p>
+                </div>
+                <div class="bd-field">
+                    <label for="bdAsOf" class="bd-label"><span class="bd-label-dot" aria-hidden="true"></span>Calculate As Of</label>
+                    <div class="bd-date-wrap" data-date-wrap>
+                        <input id="bdAsOf" type="text" inputmode="numeric" placeholder="DD-MM-YYYY">
+                        <button type="button" class="bd-date-btn" data-date-open aria-label="Open calculation date calendar">&#128197;</button>
+                    </div>
+                    <p class="bd-hint">Type date or pick with calendar</p>
+                </div>
+            </div>
+            <div id="bdPicker" class="bd-picker" hidden>
+                <div class="bd-picker-head">
+                    <button type="button" class="bd-picker-nav" id="bdPrevMonth" aria-label="Previous month">&#8249;</button>
+                    <div class="bd-picker-title" id="bdPickerTitle">
+                        <button type="button" class="bd-picker-title-btn" id="bdTitleMonth" aria-label="Choose month">April</button>
+                        <button type="button" class="bd-picker-title-btn" id="bdTitleYear" aria-label="Choose year">2026</button>
+                    </div>
+                    <p class="bd-picker-caption" id="bdPickerCaption" hidden>Years</p>
+                    <button type="button" class="bd-picker-nav" id="bdNextMonth" aria-label="Next month">&#8250;</button>
+                </div>
+                <div class="bd-picker-week" aria-hidden="true">
+                    <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                </div>
+                <div id="bdPickerDays" class="bd-picker-days"></div>
+                <div id="bdPickerCells" class="bd-cell-grid" hidden></div>
+                <div class="bd-picker-foot">
+                    <button type="button" class="bd-picker-link" id="bdClearDate">Clear</button>
+                    <button type="button" class="bd-picker-link" id="bdPickToday">Today</button>
+                </div>
+            </div>
+
+            <div class="convert-actions" style="margin-top:12px;">
+                <button id="bdCalcBtn" type="button">Calculate Age</button>
+                <button id="bdTodayBtn" type="button" class="download-btn">Use Today</button>
+            </div>
+
+            <p id="bdStatus" class="status" aria-live="polite">Select your birth date to start.</p>
+
+            <div class="bd-stats">
+                <div class="bd-stat"><p class="bd-key">Exact Age</p><p id="bdAge" class="bd-value">--</p></div>
+                <div class="bd-stat"><p class="bd-key">Total Days Lived</p><p id="bdDays" class="bd-value">--</p></div>
+                <div class="bd-stat"><p class="bd-key">Born On</p><p id="bdWeekday" class="bd-value">--</p></div>
+                <div class="bd-stat"><p class="bd-key">Next Birthday</p><p id="bdNext" class="bd-value">--</p></div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>FAQ, Tips and Shortcuts - Birthdate Calculator</h2>
+            <div class="faq-list">
+                <details class="faq-item" open>
+                    <summary>How do I use this Birthdate Calculator?</summary>
+                    <p>1) Enter your Birth Date and Calculate As Of date. 2) Click Calculate Age. 3) Read exact age, total days, weekday, and next birthday.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I type my date with keyboard?</summary>
+                    <p>Yes. You can type dates in DD-MM-YYYY format, for example 01-12-2000.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What happens when I tap year or month in the picker?</summary>
+                    <p>Year and month lists open with the day grid hidden. After you select one, the day grid appears again.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How many years are available?</summary>
+                    <p>The year selector shows a long range from 1800 to 2026 in a scrollable list.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What are useful tips for faster use?</summary>
+                    <p>Type dates directly for speed, use Today button for quick current-date calculation, and use month/year selectors to jump faster than day-by-day navigation.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What keyboard shortcuts are supported?</summary>
+                    <p>Space or Arrow Down opens calendar, Enter validates input and calculates when both dates are set, and Escape closes the open calendar.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../birthdate-calculator.js"></script>
+</body>
+</html>
+

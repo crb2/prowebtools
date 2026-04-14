@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - ProwebTools</title>
+    <meta name="description" content="Learn about ProwebTools and our mission to provide fast, free, browser-based utility tools.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://prowebtools.in/about-us/">
+    <link rel="icon" type="image/svg+xml" href="../favicon-index.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        .legal-shell {
+            margin-top: 20px;
+            border: 1px solid rgba(118, 164, 214, 0.85);
+            border-radius: 16px;
+            padding: 18px;
+            background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%);
+        }
+        .legal-shell p { line-height: 1.6; color: var(--text-soft); }
+        .legal-shell h2 { margin-top: 18px; }
+        .site-footer {
+            margin-top: 22px;
+            border-top: 1px solid rgba(126, 167, 216, 0.75);
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .footer-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .footer-links a {
+            text-decoration: none;
+            color: #0e325c;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            border: 1px solid #9fc0e2;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+        .footer-note { margin: 0; color: #2e5d8d; font-size: 0.84rem; font-weight: 600; }
+        [data-theme="dark"] .legal-shell { border-color: #45638b; background: linear-gradient(180deg, rgba(24, 40, 65, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%); }
+        [data-theme="dark"] .site-footer { border-top-color: #45638b; }
+        [data-theme="dark"] .footer-links a { color: #d9e8ff; border-color: #4b6994; background: linear-gradient(180deg, #1f3558 0%, #152846 100%); }
+        [data-theme="dark"] .footer-note, [data-theme="dark"] .legal-shell p { color: #b7cff1; }
+    </style>
+</head>
+<body data-skip-global-faq>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>About ProwebTools</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+
+        <section class="legal-shell">
+            <p>ProwebTools is a browser-first toolkit built to make everyday digital tasks simple, fast, and accessible. Our goal is to help creators, students, and professionals complete common file and utility work without heavy software installs.</p>
+            <h2>What We Build</h2>
+            <p>We focus on practical online tools for image, video, PDF, text, and developer workflows. Each tool is designed for clear UI, quick access, and reliable output.</p>
+            <h2>Our Approach</h2>
+            <p>We prioritize usability, speed, and privacy-friendly workflows. As we expand, we continue improving performance, mobile compatibility, and discoverability.</p>
+            <h2>Contact</h2>
+            <p>For support or feedback, please use the contact details provided through your official project channel or repository profile.</p>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="../">Home</a>
+                <a href="../privacy-policy/">Privacy Policy</a>
+                <a href="../terms-and-conditions/">Terms and Conditions</a>
+                <a href="../feedback/">Feedback Form</a>
+            </div>
+            <p class="footer-note">&copy; <span id="currentYear"></span> ProwebTools. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script>document.getElementById("currentYear").textContent = String(new Date().getFullYear());</script>
+</body>
+</html>
