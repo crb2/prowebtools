@@ -101,11 +101,15 @@ function createDownloadJob(label) {
     downloadBtn.textContent = "Download";
     actions.appendChild(downloadBtn);
 
-    row.appendChild(title);
+    const head = document.createElement("div");
+    head.className = "fb-job-head";
+    head.appendChild(title);
+    head.appendChild(actions);
+
+    row.appendChild(head);
     row.appendChild(state);
     row.appendChild(barWrap);
     row.appendChild(meta);
-    row.appendChild(actions);
     fbDownloadJobs.prepend(row);
 
     return { row, state, bar, meta, downloadBtn };
@@ -151,7 +155,7 @@ function triggerBrowserDownload(objectUrl, fileName) {
 function enableJobDownloadButton(job, fileName, objectUrl, label) {
     if (!job?.downloadBtn) return;
     job.downloadBtn.classList.remove("hidden");
-    job.downloadBtn.textContent = "Download";
+    job.downloadBtn.textContent = "Redownload";
     job.downloadBtn.onclick = () => {
         triggerBrowserDownload(objectUrl, fileName);
         setFbStatus(`Downloaded ${label}.`);

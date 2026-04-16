@@ -939,19 +939,6 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                     const anyLabel = `${formatText} ${qualityText} ${formatIdText}`;
                     const pMatch = anyLabel.match(/(\d{3,4})p/);
                     if (pMatch) parsedHeight = Number(pMatch[1] || 0);
-                    if (!parsedHeight) {
-                        const hdMatch = anyLabel.match(/hd\s*(\d{3,4})/);
-                        if (hdMatch) parsedHeight = Number(hdMatch[1] || 0);
-                    }
-                }
-                if (!explicitHeight && !parsedHeight) {
-                    if (/\b8k\b/.test(formatNoteText) || /\b8k\b/.test(resolutionText)) {
-                        parsedHeight = 4320;
-                    } else if (/\b4k\b/.test(formatNoteText) || /\b4k\b/.test(resolutionText)) {
-                        parsedHeight = 2160;
-                    } else if (/\b2k\b/.test(formatNoteText) || /\b2k\b/.test(resolutionText)) {
-                        parsedHeight = 1440;
-                    }
                 }
                 if (!explicitHeight && !parsedHeight) {
                     const resMatch = resolutionText.match(/(\d{3,5})x(\d{3,5})/);

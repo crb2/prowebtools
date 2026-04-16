@@ -3,13 +3,15 @@ services:
     name: prowebtools
     env: node
     plan: free
-    buildCommand: npm ci && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp && chmod +x ./yt-dlp
+    buildCommand: npm ci && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp && chmod +x ./yt-dlp && curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ./ffmpeg.tar.xz && tar -xf ./ffmpeg.tar.xz && cp ./ffmpeg-*-amd64-static/ffmpeg ./ffmpeg && chmod +x ./ffmpeg
     startCommand: node server.js
     envVars:
       - key: ALLOWED_ORIGINS
         value: https://prowebtools.in,https://www.prowebtools.in
       - key: YT_DLP_BIN
         value: /opt/render/project/src/yt-dlp
+      - key: FFMPEG_BIN
+        value: /opt/render/project/src/ffmpeg
       - key: FORMAT_FETCH_BUDGET_MS
         value: "60000"
       - key: FORMAT_FETCH_ATTEMPT_TIMEOUT_MS
