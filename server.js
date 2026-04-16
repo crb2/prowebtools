@@ -25,8 +25,8 @@ function readPositiveIntEnv(key, fallback) {
 }
 
 const FORMAT_CACHE_TTL_MS = readPositiveIntEnv("FORMAT_CACHE_TTL_MS", 5 * 60 * 1000);
-const FORMAT_FETCH_BUDGET_MS = readPositiveIntEnv("FORMAT_FETCH_BUDGET_MS", 120000);
-const FORMAT_FETCH_ATTEMPT_TIMEOUT_MS = readPositiveIntEnv("FORMAT_FETCH_ATTEMPT_TIMEOUT_MS", 20000);
+const FORMAT_FETCH_BUDGET_MS = readPositiveIntEnv("FORMAT_FETCH_BUDGET_MS", 60000);
+const FORMAT_FETCH_ATTEMPT_TIMEOUT_MS = readPositiveIntEnv("FORMAT_FETCH_ATTEMPT_TIMEOUT_MS", 12000);
 const ENABLE_BROWSER_COOKIE_STRATEGIES = process.env.ENABLE_BROWSER_COOKIE_STRATEGIES === "1";
 const facebookFormatCache = new Map();
 
@@ -372,6 +372,41 @@ function mapYtDlpError(errorText) {
         };
     }
     return { status: 500, message: text || "yt-dlp failed to fetch this link." };
+}
+
+function buildAutoFallbackFormats() {
+    return [
+        {
+            id: "best",
+            height: 1080,
+            resolution: "auto",
+            ext: "mp4",
+            fps: 0,
+            tbr: 0,
+            hasAudio: true,
+            label: "1080p (Auto best)"
+        },
+        {
+            id: "best[height<=720]/best",
+            height: 720,
+            resolution: "auto",
+            ext: "mp4",
+            fps: 0,
+            tbr: 0,
+            hasAudio: true,
+            label: "720p (Auto fallback)"
+        },
+        {
+            id: "best[height<=480]/best",
+            height: 480,
+            resolution: "auto",
+            ext: "mp4",
+            fps: 0,
+            tbr: 0,
+            hasAudio: true,
+            label: "480p (Auto fallback)"
+        }
+    ];
 }
 
 async function resolveShareUrl(urlText) {
@@ -1003,6 +1038,7 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
             let chosenInfo = null;
             let chosenTitle = "";
             let lastFormatError = "";
+            let discoveredTitle = "";
             const rememberFormatError = (error) => {
                 const text = String(error?.message || error || "");
                 if (!text) return;
@@ -1040,9 +1076,13 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                             candidateUrl
                         ], FORMAT_FETCH_ATTEMPT_TIMEOUT_MS);
                         const parsedInfo = JSON.parse(infoRaw.stdout || "{}");
+                        discoveredTitle = discoveredTitle || String(parsedInfo?.title || "").trim();
                         const mapped = mapFormatsFromInfo(parsedInfo);
                         if (!mapped.length) {
-                            throw new Error("No downloadable video+audio formats found.");
+                            chosenInfo = buildAutoFallbackFormats();
+                            chosenTitle = String(parsedInfo?.title || "facebook_video").trim();
+                            stopEarly = true;
+                            break;
                         }
                         const maxHeight = mapped.reduce((max, f) => Math.max(max, Number(f?.height || 0)), 0);
                         const withAudioCount = mapped.reduce((acc, f) => acc + (f?.hasAudio ? 1 : 0), 0);
@@ -1070,6 +1110,17 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                         title: cached.title || "facebook_video",
                         formats: cached.formats,
                         cached: true
+                    });
+                    return;
+                }
+                const fallbackFormats = buildAutoFallbackFormats();
+                const fallbackTitle = discoveredTitle || "facebook_video";
+                const genericFormatFailure = /No downloadable video\+audio formats found|No formats found/i.test(lastFormatError || "");
+                if (genericFormatFailure) {
+                    res.json({
+                        ok: true,
+                        title: fallbackTitle,
+                        formats: fallbackFormats
                     });
                     return;
                 }

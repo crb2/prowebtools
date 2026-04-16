@@ -11,6 +11,6 @@ services:
       - key: YT_DLP_BIN
         value: /opt/render/project/src/yt-dlp
       - key: FORMAT_FETCH_BUDGET_MS
-        value: "120000"
+        value: "60000"
       - key: FORMAT_FETCH_ATTEMPT_TIMEOUT_MS
-        value: "20000"
+        value: "12000"
