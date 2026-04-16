@@ -20,6 +20,7 @@ const fetchDefaultText = fbFetchBtn ? fbFetchBtn.textContent : "Fetch Options";
 const QUALITY_PRESETS = [1440, 1080, 720, 640, 540, 480, 360, 270];
 const PRESET_TOLERANCE = 48;
 const DOWNLOAD_TIMEOUT_MS = 7 * 60 * 1000;
+const PROD_BACKEND_ORIGIN = "https://prowebtools.onrender.com";
 
 function setFbStatus(message, isError = false) {
     if (!fbStatus) return;
@@ -209,6 +210,12 @@ function getApiUrl(pathname) {
     if (isLocalHost && !isBackendPort) {
         return `${LOCAL_BACKEND_ORIGIN}${path}`;
     }
+
+    // Production fallback when frontend and backend are on different origins.
+    if (!isLocalHost && PROD_BACKEND_ORIGIN) {
+        return `${PROD_BACKEND_ORIGIN}${path}`;
+    }
+
     return path;
 }
 

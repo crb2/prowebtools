@@ -6,6 +6,14 @@ import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+const DEFAULT_ALLOWED_ORIGINS = new Set([
+    "https://prowebtools.in",
+    "https://www.prowebtools.in"
+]);
 const MAX_UPLOAD_BYTES = 2 * 1024 ** 3;
 const FFMPEG_BIN = process.env.FFMPEG_BIN || "ffmpeg";
 const YT_DLP_TEMP_DIR = process.env.YT_DLP_TEMP_DIR || path.join(process.cwd(), ".yt-dlp-tmp");
@@ -67,7 +75,11 @@ app.use(
                 callback(null, true);
                 return;
             }
-            const allowed = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+            const normalizedOrigin = String(origin).trim();
+            const isLocalOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalizedOrigin);
+            const isConfiguredOrigin = ALLOWED_ORIGINS.includes(normalizedOrigin);
+            const isDefaultProdOrigin = DEFAULT_ALLOWED_ORIGINS.has(normalizedOrigin);
+            const allowed = isLocalOrigin || isConfiguredOrigin || isDefaultProdOrigin;
             callback(allowed ? null : new Error("CORS blocked"), allowed);
         }
     })
