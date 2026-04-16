@@ -219,6 +219,49 @@ function getApiUrl(pathname) {
     return path;
 }
 
+function getApiFallbackUrl(pathname) {
+    const path = String(pathname || "");
+    const host = (window.location.hostname || "").toLowerCase();
+    const isLocalHost = host === "localhost" || host === "127.0.0.1";
+    if (isLocalHost) return "";
+    if (!PROD_BACKEND_ORIGIN) return "";
+    return `${PROD_BACKEND_ORIGIN}${path}`;
+}
+
+async function postApiWithFallback(pathname, payload, options = {}) {
+    const primaryUrl = getApiUrl(pathname);
+    const fallbackUrl = getApiFallbackUrl(pathname);
+    const reqInit = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: options.signal
+    };
+
+    let primaryResponse = null;
+    try {
+        primaryResponse = await fetch(primaryUrl, reqInit);
+    } catch (err) {
+        if (!fallbackUrl || fallbackUrl === primaryUrl) throw err;
+        return fetch(fallbackUrl, reqInit);
+    }
+
+    const shouldRetryFallback =
+        fallbackUrl &&
+        fallbackUrl !== primaryUrl &&
+        !primaryResponse.ok &&
+        (primaryResponse.status === 404 ||
+            primaryResponse.status === 405 ||
+            primaryResponse.status === 501 ||
+            String(primaryResponse.headers.get("content-type") || "").includes("text/html"));
+
+    if (shouldRetryFallback) {
+        return fetch(fallbackUrl, reqInit);
+    }
+
+    return primaryResponse;
+}
+
 function autoFetchIfNeeded(url) {
     const normalized = parseFacebookUrl(url || "");
     if (!normalized) return;
@@ -316,11 +359,10 @@ async function fetchFacebookVideo() {
     }
 
     try {
-        const response = await fetch(getApiUrl("/api/fetch-facebook-video"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: normalizedUrl, listFormats: true })
-        });
+        const response = await postApiWithFallback(
+            "/api/fetch-facebook-video",
+            { url: normalizedUrl, listFormats: true }
+        );
 
         if (!response.ok) {
             let message = `Request failed (${response.status}).`;
@@ -407,15 +449,14 @@ async function downloadByFormat(formatId, label, buttonEl) {
                 meta: `Elapsed ${formatDurationShort(elapsed)} - Est. ${formatDurationShort(remainingMs)} left`
             });
         }, 1000);
-        const response = await fetch(getApiUrl("/api/fetch-facebook-video"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+        const response = await postApiWithFallback(
+            "/api/fetch-facebook-video",
+            {
                 url: lastValidUrl,
                 formatId
-            }),
-            signal: controller.signal
-        });
+            },
+            { signal: controller.signal }
+        );
         if (waitTimer) {
             window.clearInterval(waitTimer);
             waitTimer = null;
