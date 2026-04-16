@@ -21,6 +21,9 @@ const QUALITY_PRESETS = [1440, 1080, 720, 640, 540, 480, 360, 270];
 const PRESET_TOLERANCE = 48;
 const DOWNLOAD_TIMEOUT_MS = 7 * 60 * 1000;
 const PROD_BACKEND_ORIGIN = "https://prowebtools.onrender.com";
+const completedDownloadsByFormat = new Map();
+const activeDownloadsByFormat = new Set();
+const downloadJobsByFormat = new Map();
 
 function setFbStatus(message, isError = false) {
     if (!fbStatus) return;
@@ -41,6 +44,16 @@ function cleanupFbObjectUrl() {
     if (!fbObjectUrl) return;
     URL.revokeObjectURL(fbObjectUrl);
     fbObjectUrl = "";
+}
+
+function clearCompletedDownloads() {
+    completedDownloadsByFormat.forEach((entry) => {
+        if (entry?.objectUrl) {
+            URL.revokeObjectURL(entry.objectUrl);
+        }
+    });
+    completedDownloadsByFormat.clear();
+    cleanupFbObjectUrl();
 }
 
 function stopRequestWaitTimer() {
@@ -80,13 +93,22 @@ function createDownloadJob(label) {
     meta.className = "fb-job-meta";
     meta.textContent = "";
 
+    const actions = document.createElement("div");
+    actions.className = "fb-job-actions";
+    const downloadBtn = document.createElement("button");
+    downloadBtn.type = "button";
+    downloadBtn.className = "download-btn fb-job-download hidden";
+    downloadBtn.textContent = "Download";
+    actions.appendChild(downloadBtn);
+
     row.appendChild(title);
     row.appendChild(state);
     row.appendChild(barWrap);
     row.appendChild(meta);
+    row.appendChild(actions);
     fbDownloadJobs.prepend(row);
 
-    return { row, state, bar, meta };
+    return { row, state, bar, meta, downloadBtn };
 }
 
 function updateJob(job, { state, percent, meta } = {}) {
@@ -104,10 +126,36 @@ function finalizeJob(job, text, isError = false) {
     job.state.textContent = text;
     if (isError) {
         job.row.classList.add("is-error");
+        if (job.downloadBtn) {
+            job.downloadBtn.classList.add("hidden");
+            job.downloadBtn.onclick = null;
+        }
         return;
     }
     job.row.classList.add("is-done");
+    job.row.classList.remove("is-error");
     job.bar.style.width = "100%";
+}
+
+function triggerBrowserDownload(objectUrl, fileName) {
+    const tempLink = document.createElement("a");
+    tempLink.href = objectUrl;
+    tempLink.download = fileName || "facebook_video.mp4";
+    tempLink.rel = "noopener";
+    tempLink.style.display = "none";
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    tempLink.remove();
+}
+
+function enableJobDownloadButton(job, fileName, objectUrl, label) {
+    if (!job?.downloadBtn) return;
+    job.downloadBtn.classList.remove("hidden");
+    job.downloadBtn.textContent = "Download";
+    job.downloadBtn.onclick = () => {
+        triggerBrowserDownload(objectUrl, fileName);
+        setFbStatus(`Downloaded ${label}.`);
+    };
 }
 
 function formatDurationShort(ms) {
@@ -228,9 +276,19 @@ function getApiFallbackUrl(pathname) {
     return `${PROD_BACKEND_ORIGIN}${path}`;
 }
 
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isLocalRuntime() {
+    const host = (window.location.hostname || "").toLowerCase();
+    return host === "localhost" || host === "127.0.0.1";
+}
+
 async function postApiWithFallback(pathname, payload, options = {}) {
     const primaryUrl = getApiUrl(pathname);
     const fallbackUrl = getApiFallbackUrl(pathname);
+    const urls = Array.from(new Set([primaryUrl, fallbackUrl].filter(Boolean)));
     const reqInit = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -238,28 +296,33 @@ async function postApiWithFallback(pathname, payload, options = {}) {
         signal: options.signal
     };
 
-    let primaryResponse = null;
-    try {
-        primaryResponse = await fetch(primaryUrl, reqInit);
-    } catch (err) {
-        if (!fallbackUrl || fallbackUrl === primaryUrl) throw err;
-        return fetch(fallbackUrl, reqInit);
+    let lastError = null;
+    for (const url of urls) {
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+            try {
+                const response = await fetch(url, reqInit);
+                const shouldRetryFallback =
+                    !response.ok &&
+                    (response.status === 404 ||
+                        response.status === 405 ||
+                        response.status === 501 ||
+                        String(response.headers.get("content-type") || "").includes("text/html"));
+
+                if (shouldRetryFallback && urls.length > 1 && url === primaryUrl) {
+                    break;
+                }
+                return response;
+            } catch (err) {
+                lastError = err;
+                if (attempt === 0) {
+                    await sleep(1800);
+                    continue;
+                }
+            }
+        }
     }
 
-    const shouldRetryFallback =
-        fallbackUrl &&
-        fallbackUrl !== primaryUrl &&
-        !primaryResponse.ok &&
-        (primaryResponse.status === 404 ||
-            primaryResponse.status === 405 ||
-            primaryResponse.status === 501 ||
-            String(primaryResponse.headers.get("content-type") || "").includes("text/html"));
-
-    if (shouldRetryFallback) {
-        return fetch(fallbackUrl, reqInit);
-    }
-
-    return primaryResponse;
+    throw (lastError || new Error("Failed to fetch"));
 }
 
 function autoFetchIfNeeded(url) {
@@ -353,6 +416,9 @@ async function fetchFacebookVideo() {
     setBusyState(true, "Fetching available quality options...");
     fbResult.classList.add("hidden");
     fbQualityActions.innerHTML = "";
+    activeDownloadsByFormat.clear();
+    downloadJobsByFormat.clear();
+    clearCompletedDownloads();
     if (fbDownloadJobs) {
         fbDownloadJobs.innerHTML = "";
         fbDownloadJobs.classList.add("hidden");
@@ -405,7 +471,7 @@ async function fetchFacebookVideo() {
                 fbVideoTitleTop.classList.add("hidden");
             }
         }
-        fbMeta.textContent = "Choose a quality to download (direct video+audio only)";
+        fbMeta.textContent = "Choose exact quality to download.";
 
         renderQualityButtons(formats);
         fbResult.classList.remove("hidden");
@@ -413,7 +479,9 @@ async function fetchFacebookVideo() {
     } catch (error) {
         const raw = error?.message || "";
         const normalized = /Failed to fetch/i.test(raw)
-            ? "Cannot reach backend. Start server.js and try again."
+            ? (isLocalRuntime()
+                ? "Cannot reach backend. Start server.js and try again."
+                : "Backend is temporarily unreachable or waking up. Please retry in 30-60 seconds.")
             : raw || "Failed to fetch video.";
         setFbStatus(normalized, true);
     } finally {
@@ -425,6 +493,18 @@ async function downloadByFormat(formatId, label, buttonEl) {
     if (!lastValidUrl || !formatId) return;
     if (!fbFetchBtn) return;
 
+    const cached = completedDownloadsByFormat.get(formatId);
+    if (cached?.objectUrl) {
+        triggerBrowserDownload(cached.objectUrl, cached.fileName);
+        setFbStatus(`Downloaded ${label}.`);
+        return;
+    }
+    if (activeDownloadsByFormat.has(formatId)) {
+        setFbStatus(`${label} is already processing.`, false);
+        return;
+    }
+    activeDownloadsByFormat.add(formatId);
+
     if (buttonEl) {
         buttonEl.classList.add("is-busy");
         buttonEl.disabled = true;
@@ -432,7 +512,18 @@ async function downloadByFormat(formatId, label, buttonEl) {
     setFbStatus(`Starting ${label}...`);
     let timeoutId = null;
     let waitTimer = null;
-    const job = createDownloadJob(label);
+    let job = downloadJobsByFormat.get(formatId);
+    if (!job || !job.row?.isConnected) {
+        job = createDownloadJob(label);
+        if (job) downloadJobsByFormat.set(formatId, job);
+    } else {
+        job.row.classList.remove("is-done", "is-error");
+        if (job.downloadBtn) {
+            job.downloadBtn.classList.add("hidden");
+            job.downloadBtn.onclick = null;
+        }
+        updateJob(job, { state: `Preparing ${label} video...`, percent: 0, meta: "" });
+    }
     const estimatedPrepareMs = estimatePrepareMs(label);
 
     try {
@@ -512,18 +603,13 @@ async function downloadByFormat(formatId, label, buttonEl) {
             throw new Error("Received an empty file for this quality.");
         }
 
-        cleanupFbObjectUrl();
-        fbObjectUrl = URL.createObjectURL(blob);
+        const objectUrl = URL.createObjectURL(blob);
+        fbObjectUrl = objectUrl;
 
         const fileName = getHeaderText(response.headers, "X-File-Name") || "facebook_video.mp4";
-        const tempLink = document.createElement("a");
-        tempLink.href = fbObjectUrl;
-        tempLink.download = fileName;
-        tempLink.rel = "noopener";
-        tempLink.style.display = "none";
-        document.body.appendChild(tempLink);
-        tempLink.click();
-        tempLink.remove();
+        completedDownloadsByFormat.set(formatId, { objectUrl, fileName, label });
+        triggerBrowserDownload(objectUrl, fileName);
+        enableJobDownloadButton(job, fileName, objectUrl, label);
         setFbStatus(`Downloaded ${label}.`);
         finalizeJob(job, `Completed ${label}`);
     } catch (error) {
@@ -531,7 +617,9 @@ async function downloadByFormat(formatId, label, buttonEl) {
         const normalized = /AbortError|timed out|timeout/i.test(raw)
             ? "Download took too long. Try 1080p or 720p for faster results."
             : /Failed to fetch/i.test(raw)
-            ? "Cannot reach backend. Start server.js and try again."
+            ? (isLocalRuntime()
+                ? "Cannot reach backend. Start server.js and try again."
+                : "Backend is temporarily unreachable or waking up. Please retry in 30-60 seconds.")
             : raw || "Failed to download selected quality.";
         setFbStatus(normalized, true);
         finalizeJob(job, normalized, true);
@@ -546,6 +634,7 @@ async function downloadByFormat(formatId, label, buttonEl) {
             buttonEl.classList.remove("is-busy");
             buttonEl.disabled = false;
         }
+        activeDownloadsByFormat.delete(formatId);
     }
 }
 
@@ -639,4 +728,6 @@ if (fbUrlInput) {
 
 tryAutofillFromClipboard();
 startClipboardWatcher();
-window.addEventListener("beforeunload", cleanupFbObjectUrl);
+window.addEventListener("beforeunload", () => {
+    clearCompletedDownloads();
+});

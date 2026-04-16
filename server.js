@@ -374,39 +374,19 @@ function mapYtDlpError(errorText) {
     return { status: 500, message: text || "yt-dlp failed to fetch this link." };
 }
 
-function buildAutoFallbackFormats() {
-    return [
-        {
-            id: "best",
-            height: 1080,
-            resolution: "auto",
-            ext: "mp4",
-            fps: 0,
-            tbr: 0,
-            hasAudio: true,
-            label: "1080p (Auto best)"
-        },
-        {
-            id: "best[height<=720]/best",
-            height: 720,
-            resolution: "auto",
-            ext: "mp4",
-            fps: 0,
-            tbr: 0,
-            hasAudio: true,
-            label: "720p (Auto fallback)"
-        },
-        {
-            id: "best[height<=480]/best",
-            height: 480,
-            resolution: "auto",
-            ext: "mp4",
-            fps: 0,
-            tbr: 0,
-            hasAudio: true,
-            label: "480p (Auto fallback)"
-        }
-    ];
+function buildExactHeightSelector(height) {
+    const h = Math.max(144, Math.min(4320, Math.round(Number(height) || 0)));
+    return `best[height=${h}]/bestvideo[height=${h}]+bestaudio/best[height=${h}]`;
+}
+
+function resolveRequestedFormatSelector(requestedFormatId) {
+    const raw = String(requestedFormatId || "").trim();
+    if (!raw) return "";
+    const heightMatch = raw.match(/^h:(\d{3,4})$/i);
+    if (heightMatch) {
+        return buildExactHeightSelector(Number(heightMatch[1] || 0));
+    }
+    return raw;
 }
 
 async function resolveShareUrl(urlText) {
@@ -986,7 +966,7 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                 const formatId = String(fmt?.format_id || "").trim();
                 const hasVideo = fmt?.vcodec && fmt.vcodec !== "none";
                 const hasAudio = fmt?.acodec && fmt.acodec !== "none";
-                if (!height || !formatId || !hasVideo || !hasAudio) return;
+                if (!height || !formatId || !hasVideo) return;
 
                 const normalizedFmt = {
                     ...fmt,
@@ -1022,14 +1002,14 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                         /\bvideo only\b/.test(formatText)
                     );
                     return {
-                        id: String(fmt?.format_id || ""),
+                        id: `h:${h}`,
                         height: h,
                         resolution: String(fmt?.resolution || ""),
                         ext,
                         fps,
                         tbr,
                         hasAudio,
-                        label: `${h}p${fps ? ` ${fps}fps` : ""} (${ext.toUpperCase()}${hasAudio ? ", with audio" : ", video only"})`
+                        label: `${h}p${fps ? ` ${fps}fps` : ""} (${hasAudio ? "with audio" : "adaptive"})`
                     };
                 });
         }
@@ -1078,12 +1058,7 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                         const parsedInfo = JSON.parse(infoRaw.stdout || "{}");
                         discoveredTitle = discoveredTitle || String(parsedInfo?.title || "").trim();
                         const mapped = mapFormatsFromInfo(parsedInfo);
-                        if (!mapped.length) {
-                            chosenInfo = buildAutoFallbackFormats();
-                            chosenTitle = String(parsedInfo?.title || "facebook_video").trim();
-                            stopEarly = true;
-                            break;
-                        }
+                        if (!mapped.length) throw new Error("No downloadable video formats found.");
                         const maxHeight = mapped.reduce((max, f) => Math.max(max, Number(f?.height || 0)), 0);
                         const withAudioCount = mapped.reduce((acc, f) => acc + (f?.hasAudio ? 1 : 0), 0);
                         const score = (maxHeight * 10000) + (mapped.length * 100) + withAudioCount;
@@ -1110,17 +1085,6 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
                         title: cached.title || "facebook_video",
                         formats: cached.formats,
                         cached: true
-                    });
-                    return;
-                }
-                const fallbackFormats = buildAutoFallbackFormats();
-                const fallbackTitle = discoveredTitle || "facebook_video";
-                const genericFormatFailure = /No downloadable video\+audio formats found|No formats found/i.test(lastFormatError || "");
-                if (genericFormatFailure) {
-                    res.json({
-                        ok: true,
-                        title: fallbackTitle,
-                        formats: fallbackFormats
                     });
                     return;
                 }
@@ -1161,7 +1125,8 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
             for (const candidateUrl of candidateUrls) {
                 for (const strategy of orderedDownloadStrategies) {
                     try {
-                        const selector = requestedFormatId || strategy.formatSelector;
+                        const requestedSelector = resolveRequestedFormatSelector(requestedFormatId);
+                        const selector = requestedSelector || strategy.formatSelector;
                         const meta = await runYtDlpCapture([
                             ...buildStrategyArgs(strategy, selector),
                             "--print",
@@ -1225,7 +1190,7 @@ app.post("/api/fetch-facebook-video", async (req, res) => {
         const proc = spawn(YT_DLP_BIN, [
             ...buildStrategyArgs(
                 chosenStrategy,
-                requestedFormatId || chosenStrategy.formatSelector
+                resolveRequestedFormatSelector(requestedFormatId) || chosenStrategy.formatSelector
             ),
             "-o",
             "-",
