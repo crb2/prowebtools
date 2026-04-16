@@ -1163,9 +1163,9 @@ function buildToolsFooter() {
     const legal = document.createElement("div");
     legal.className = "tools-footer-legal tools-footer-legal-global";
     legal.innerHTML = `
-        <a href="${new URL("./about-us/index.html", baseUrl).href}">About Us</a>
-        <a href="${new URL("./privacy-policy/index.html", baseUrl).href}">Privacy Policy</a>
-        <a href="${new URL("./terms-and-conditions/index.html", baseUrl).href}">Terms and Conditions</a>
+        <a href="${new URL("./about-us/", baseUrl).href}">About Us</a>
+        <a href="${new URL("./privacy-policy/", baseUrl).href}">Privacy Policy</a>
+        <a href="${new URL("./terms-and-conditions/", baseUrl).href}">Terms and Conditions</a>
     `;
 
     content.appendChild(grid);
@@ -1193,10 +1193,17 @@ function getToolBaseUrl() {
 function getToolHref(file, baseUrl) {
     const normalized = (file || "").toLowerCase();
     if (normalized === "index.html") {
-        return new URL("./index.html", baseUrl).href;
+        return new URL("./", baseUrl).href;
     }
     const slug = normalized.replace(/\.html$/i, "");
-    return new URL(`./${slug}/index.html`, baseUrl).href;
+    return new URL(`./${slug}/`, baseUrl).href;
+}
+
+function normalizeCleanUrl() {
+    const { pathname, search, hash } = window.location;
+    if (!/\/index\.html$/i.test(pathname)) return;
+    const cleanPath = pathname.replace(/index\.html$/i, "");
+    history.replaceState({}, "", `${cleanPath}${search}${hash}`);
 }
 
 function getCurrentToolFile() {
@@ -1222,6 +1229,7 @@ function getCurrentToolFile() {
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        normalizeCleanUrl();
         removeHeaderToolsMenu();
         buildBrandLink();
         ensureLanguageSelector();
@@ -1233,6 +1241,7 @@ if (document.readyState === 'loading') {
         observeTranslations();
     });
 } else {
+    normalizeCleanUrl();
     removeHeaderToolsMenu();
     buildBrandLink();
     ensureLanguageSelector();
