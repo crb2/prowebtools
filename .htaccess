@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Canonical URL cleanup for all tools:
+# 1) /path/index.html -> /path/
+# 2) /tool-name.html  -> /tool-name/
+
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html(?:[\s?]|$) [NC]
+RewriteRule ^(.*/)?index\.html$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+([^.?\s]+)\.html(?:[\s?]|$) [NC]
+RewriteRule ^([^.]+)\.html$ /$1/ [R=301,L]
