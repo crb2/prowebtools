@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-2FYPXXL7J8');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-2FYPXXL7J8');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback Form - ProwebTools</title>
@@ -26,20 +26,24 @@
             padding: 18px;
             background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%);
         }
+
         .feedback-shell p {
             line-height: 1.6;
             color: var(--text-soft);
         }
+
         .feedback-form {
             margin-top: 14px;
             display: grid;
             gap: 10px;
         }
+
         .feedback-form label {
             font-weight: 700;
             color: #1a446f;
             font-size: 0.92rem;
         }
+
         .feedback-form input,
         .feedback-form textarea {
             width: 100%;
@@ -51,16 +55,19 @@
             background: #fff;
             color: #14385f;
         }
+
         .feedback-form textarea {
             min-height: 140px;
             resize: vertical;
         }
+
         .feedback-actions {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .feedback-submit {
             border: 1px solid #8cb2dc;
             border-radius: 999px;
@@ -70,15 +77,18 @@
             background: linear-gradient(180deg, #ffffff 0%, #e7f2ff 100%);
             cursor: pointer;
         }
+
         .feedback-status {
             margin: 0;
             font-weight: 700;
             color: #2d5f90;
             font-size: 0.9rem;
         }
+
         .feedback-status.is-error {
             color: #a02b2b;
         }
+
         .site-footer {
             margin-top: 22px;
             border-top: 1px solid rgba(126, 167, 216, 0.75);
@@ -88,11 +98,13 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+
         .footer-links {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
+
         .footer-links a {
             text-decoration: none;
             color: #0e325c;
@@ -103,45 +115,54 @@
             font-size: 0.84rem;
             font-weight: 700;
         }
+
         .footer-note {
             margin: 0;
             color: #2e5d8d;
             font-size: 0.84rem;
             font-weight: 600;
         }
+
         [data-theme="dark"] .feedback-shell {
             border-color: #45638b;
             background: linear-gradient(180deg, rgba(24, 40, 65, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%);
         }
+
         [data-theme="dark"] .feedback-form label,
         [data-theme="dark"] .feedback-status,
         [data-theme="dark"] .feedback-shell p {
             color: #c7dbf7;
         }
+
         [data-theme="dark"] .feedback-form input,
         [data-theme="dark"] .feedback-form textarea {
             border-color: #4b6994;
             background: #12233d;
             color: #e2edff;
         }
+
         [data-theme="dark"] .feedback-submit {
             color: #d9e8ff;
             border-color: #4b6994;
             background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
         }
+
         [data-theme="dark"] .site-footer {
             border-top-color: #45638b;
         }
+
         [data-theme="dark"] .footer-links a {
             color: #d9e8ff;
             border-color: #4b6994;
             background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
         }
+
         [data-theme="dark"] .footer-note {
             color: #b7cff1;
         }
     </style>
 </head>
+
 <body data-skip-global-faq>
     <main class="app">
         <div class="headline-bar">
@@ -160,19 +181,23 @@
         </div>
 
         <section class="feedback-shell">
-            <p>Your suggestions help us improve ProwebTools. Share what is working, what feels confusing, or what tools you want next.</p>
+            <p>Your suggestions help us improve ProwebTools. Share what is working, what feels confusing, or what tools
+                you want next.</p>
             <form id="feedbackForm" class="feedback-form" novalidate>
                 <div>
                     <label for="feedbackName">Name</label>
-                    <input id="feedbackName" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+                    <input id="feedbackName" name="name" type="text" placeholder="Your name" autocomplete="name"
+                        required>
                 </div>
                 <div>
                     <label for="feedbackEmail">Email</label>
-                    <input id="feedbackEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                    <input id="feedbackEmail" name="email" type="email" placeholder="you@example.com"
+                        autocomplete="email" required>
                 </div>
                 <div>
                     <label for="feedbackMessage">Feedback</label>
-                    <textarea id="feedbackMessage" name="message" placeholder="Write your feedback..." required></textarea>
+                    <textarea id="feedbackMessage" name="message" placeholder="Write your feedback..."
+                        required></textarea>
                 </div>
                 <div class="feedback-actions">
                     <button class="feedback-submit" type="submit">Submit Feedback</button>
@@ -183,7 +208,6 @@
 
         <footer class="site-footer">
             <div class="footer-links">
-                <a href="../">Home</a>
                 <a href="../about-us/">About Us</a>
                 <a href="../privacy-policy/">Privacy Policy</a>
                 <a href="../terms-and-conditions/">Terms and Conditions</a>
@@ -222,4 +246,5 @@
         })();
     </script>
 </body>
+
 </html>

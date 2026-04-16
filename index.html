@@ -1,20 +1,23 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-2FYPXXL7J8');
-</script>
+        gtag('config', 'G-2FYPXXL7J8');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProwebTools - Free Online Tools for Image, Video, PDF and Text</title>
-    <meta name="description" content="ProwebTools offers free browser-based tools for YouTube thumbnails, image editing, video utilities, PDF tasks, and developer text utilities.">
-    <meta name="keywords" content="prowebtools, online tools, youtube thumbnail downloader, image tools, video tools, pdf tools, json formatter, regex tester">
+    <meta name="description"
+        content="ProwebTools offers free browser-based tools for YouTube thumbnails, image editing, video utilities, PDF tasks, and developer text utilities.">
+    <meta name="keywords"
+        content="prowebtools, online tools, youtube thumbnail downloader, image tools, video tools, pdf tools, json formatter, regex tester">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <link rel="canonical" href="https://prowebtools.in/">
@@ -67,18 +70,16 @@
             display: inline-block;
             padding: 0.06em 0.08em 0.1em;
             white-space: nowrap;
-            background: linear-gradient(
-                90deg,
-                #8f73ff 0%,
-                #4aa0ff 12.5%,
-                #25d3ff 25%,
-                #62ffc7 37.5%,
-                #f7ee62 50%,
-                #62ffc7 62.5%,
-                #25d3ff 75%,
-                #4aa0ff 87.5%,
-                #8f73ff 100%
-            );
+            background: linear-gradient(90deg,
+                    #8f73ff 0%,
+                    #4aa0ff 12.5%,
+                    #25d3ff 25%,
+                    #62ffc7 37.5%,
+                    #f7ee62 50%,
+                    #62ffc7 62.5%,
+                    #25d3ff 75%,
+                    #4aa0ff 87.5%,
+                    #8f73ff 100%);
             background-size: 200% 100%;
             -webkit-background-clip: text;
             background-clip: text;
@@ -96,8 +97,13 @@
         }
 
         @keyframes titleFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: -200% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: -200% 50%;
+            }
         }
 
         .sr-only {
@@ -327,7 +333,6 @@
         .headline-bar {
             align-items: center;
         }
-
     </style>
     <script type="application/ld+json">
     {
@@ -343,6 +348,7 @@
     }
     </script>
 </head>
+
 <body data-skip-global-faq>
     <main class="app">
         <div class="headline-bar">
@@ -362,7 +368,8 @@
 
         <section class="hero-card" aria-labelledby="home-title">
             <h1 id="home-title" class="hero-title">All Tools in One Professional Workspace</h1>
-            <p class="hero-subtitle">Find and launch every tool from one organized homepage. Search by name, jump to your task in seconds, and keep a clean workflow across image, video, PDF, and utility tools.</p>
+            <p class="hero-subtitle">Find and launch every tool from one organized homepage. Search by name, jump to
+                your task in seconds, and keep a clean workflow across image, video, PDF, and utility tools.</p>
             <div class="search-row">
                 <label for="toolSearch" class="sr-only">Search tools</label>
                 <input id="toolSearch" type="search" placeholder="Search tools (example: thumbnail, pdf, image, regex)">
@@ -385,13 +392,20 @@
     </main>
 
     <noscript>
-        <p style="margin:18px auto;max-width:900px;padding:0 18px;color:#14385f;font-weight:700;">Enable JavaScript to use live tool search on the homepage.</p>
+        <p style="margin:18px auto;max-width:900px;padding:0 18px;color:#14385f;font-weight:700;">Enable JavaScript to
+            use live tool search on the homepage.</p>
     </noscript>
 
     <script src="tools-menu.js"></script>
     <script src="theme.js"></script>
     <script>
         (function () {
+            // 1. IMMEDIATE URL CLEANUP: Remove index.html from address bar on load
+            if (window.location.pathname.endsWith("index.html")) {
+                const cleanUrl = window.location.pathname.replace(/index\.html$/, "");
+                window.history.replaceState({}, document.title, cleanUrl + window.location.search);
+            }
+
             const sectionRoot = document.getElementById("toolSections");
             const searchInput = document.getElementById("toolSearch");
             const countLabel = document.getElementById("toolCount");
@@ -424,10 +438,13 @@
                 }
             ];
 
+            // 2. CLEAN HREF GENERATOR: Ensures clicked links don't show .html
             function toHref(file) {
                 const normalized = (file || "").toLowerCase();
-                if (normalized === "index.html") return "./index.html";
-                return "./" + normalized.replace(/\.html$/i, "") + "/index.html";
+                if (normalized === "index.html" || normalized === "") return "./";
+
+                const path = normalized.replace(/\.html$/i, "");
+                return "./" + path + "/";
             }
 
             function shortDescription(label) {
@@ -501,6 +518,7 @@
                 searchInput.value = initialQuery;
             }
 
+            // 3. CLEAN SEARCH URL: Keeps the URL clean while typing
             function applySearch() {
                 const query = searchInput.value.trim().toLowerCase();
                 const visible = allTools.filter((tool) => tool.label.toLowerCase().includes(query));
@@ -512,7 +530,10 @@
                 } else {
                     nextUrl.searchParams.delete("q");
                 }
-                history.replaceState({}, "", nextUrl.pathname + nextUrl.search);
+
+                // Final check to strip index.html before updating the browser bar
+                const cleanPath = nextUrl.pathname.replace(/index\.html$/, "");
+                history.replaceState({}, "", cleanPath + nextUrl.search);
             }
 
             searchInput.addEventListener("input", applySearch);
@@ -525,6 +546,5 @@
         })();
     </script>
 </body>
+
 </html>
-
-
