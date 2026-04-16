@@ -3,8 +3,10 @@ services:
     name: prowebtools
     env: node
     plan: free
-    buildCommand: npm ci && pip3 install --user -U yt-dlp
-    startCommand: export PATH="$HOME/.local/bin:$PATH" && node server.js
+    buildCommand: npm ci && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp && chmod +x ./yt-dlp
+    startCommand: node server.js
     envVars:
       - key: ALLOWED_ORIGINS
         value: https://prowebtools.in,https://www.prowebtools.in
+      - key: YT_DLP_BIN
+        value: /opt/render/project/src/yt-dlp
