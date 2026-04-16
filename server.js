@@ -17,9 +17,16 @@ const DEFAULT_ALLOWED_ORIGINS = new Set([
 const MAX_UPLOAD_BYTES = 2 * 1024 ** 3;
 const FFMPEG_BIN = process.env.FFMPEG_BIN || "ffmpeg";
 const YT_DLP_TEMP_DIR = process.env.YT_DLP_TEMP_DIR || path.join(process.cwd(), ".yt-dlp-tmp");
-const FORMAT_CACHE_TTL_MS = 5 * 60 * 1000;
-const FORMAT_FETCH_BUDGET_MS = 28000;
-const FORMAT_FETCH_ATTEMPT_TIMEOUT_MS = 7000;
+
+function readPositiveIntEnv(key, fallback) {
+    const raw = Number(process.env[key]);
+    if (!Number.isFinite(raw) || raw <= 0) return fallback;
+    return Math.floor(raw);
+}
+
+const FORMAT_CACHE_TTL_MS = readPositiveIntEnv("FORMAT_CACHE_TTL_MS", 5 * 60 * 1000);
+const FORMAT_FETCH_BUDGET_MS = readPositiveIntEnv("FORMAT_FETCH_BUDGET_MS", 120000);
+const FORMAT_FETCH_ATTEMPT_TIMEOUT_MS = readPositiveIntEnv("FORMAT_FETCH_ATTEMPT_TIMEOUT_MS", 20000);
 const ENABLE_BROWSER_COOKIE_STRATEGIES = process.env.ENABLE_BROWSER_COOKIE_STRATEGIES === "1";
 const facebookFormatCache = new Map();
 

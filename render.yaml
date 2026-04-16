@@ -10,3 +10,7 @@ services:
         value: https://prowebtools.in,https://www.prowebtools.in
       - key: YT_DLP_BIN
         value: /opt/render/project/src/yt-dlp
+      - key: FORMAT_FETCH_BUDGET_MS
+        value: "120000"
+      - key: FORMAT_FETCH_ATTEMPT_TIMEOUT_MS
+        value: "20000"
