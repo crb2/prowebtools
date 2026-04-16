@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: prowebtools
+    env: node
+    plan: free
+    buildCommand: npm ci && pip3 install --user -U yt-dlp
+    startCommand: export PATH="$HOME/.local/bin:$PATH" && node server.js
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://prowebtools.in,https://www.prowebtools.in

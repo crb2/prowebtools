@@ -47,7 +47,21 @@ function resolveYtDlpBinaryCandidates() {
 
     const nightlyPath = resolveWingetYtDlpPath(/^yt-dlp\.yt-dlp\.nightly_/i);
     const stablePath = resolveWingetYtDlpPath(/^yt-dlp\.yt-dlp_/i);
-    const candidates = [nightlyPath, stablePath, "yt-dlp"].filter(Boolean);
+    const homeDir = process.env.HOME || process.env.USERPROFILE || "";
+    const posixCandidates = [
+        path.join(homeDir, ".local", "bin", "yt-dlp"),
+        "/opt/render/.local/bin/yt-dlp",
+        "/opt/render/project/.local/bin/yt-dlp"
+    ];
+    const existingPosixCandidates = posixCandidates.filter((candidate) => {
+        try {
+            return Boolean(candidate) && fs.existsSync(candidate);
+        } catch {
+            return false;
+        }
+    });
+
+    const candidates = [nightlyPath, stablePath, ...existingPosixCandidates, "yt-dlp"].filter(Boolean);
     return Array.from(new Set(candidates));
 }
 
