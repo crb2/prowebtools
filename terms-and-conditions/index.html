@@ -13,12 +13,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms and Conditions - ProwebTools</title>
-    <meta name="description" content="Read the Terms and Conditions for using ProwebTools and its browser-based tools.">
+    <meta name="description" content="Read the ProwebTools Terms and Conditions for lawful use, limitations, responsibilities, and service rules for our free online tools.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://prowebtools.in/terms-and-conditions/">
     <link rel="icon" type="image/svg+xml" href="../favicon-index.svg">
     <link rel="stylesheet" href="../style-win7.css">
     <style>
+        .content {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+            gap: 8px;
+            width: 100%;
+        }
+        .title {
+            margin: 0;
+            background: transparent;
+            display: inline-block;
+            font-size: clamp(1.42rem, 3.1vw, 2.2rem);
+            font-weight: 900;
+            letter-spacing: clamp(-1.75px, -0.25vw, -3.5px);
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 0 0 8px rgba(121, 196, 255, 0.2);
+            position: relative;
+            overflow: visible;
+            border-radius: 0;
+            padding: 0.12em 0.12em 0.16em;
+            isolation: isolate;
+            line-height: 1.22;
+            max-width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .title::after {
+            content: none;
+        }
+
+        .title .title-text {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            display: inline-block;
+            padding: 0.06em 0.08em 0.1em;
+            white-space: nowrap;
+            background: linear-gradient(90deg, #8f73ff 0%, #4aa0ff 12.5%, #25d3ff 25%, #62ffc7 37.5%, #f7ee62 50%, #62ffc7 62.5%, #25d3ff 75%, #4aa0ff 87.5%, #8f73ff 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 0 transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 1px #000000) drop-shadow(0 1px 0 #000000);
+            animation: titleFlow 16s linear infinite;
+        }
+        .page-headline h1 { margin: 0; padding: 0; padding-left: 0.2em; }
+        [data-theme="dark"] .title { background: transparent; }
+        [data-theme="dark"] .title .title-text { -webkit-text-stroke: 0 transparent; text-shadow: none; filter: none; }
+        @keyframes titleFlow { 0% { background-position: 0% 50%; } 100% { background-position: -200% 50%; } }
         .legal-shell { margin-top: 20px; border: 1px solid rgba(118, 164, 214, 0.85); border-radius: 16px; padding: 18px; background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%); }
         .legal-shell p { line-height: 1.6; color: var(--text-soft); }
         .legal-shell h2 { margin-top: 18px; }
@@ -30,12 +83,20 @@
         [data-theme="dark"] .site-footer { border-top-color: #45638b; }
         [data-theme="dark"] .footer-links a { color: #d9e8ff; border-color: #4b6994; background: linear-gradient(180deg, #1f3558 0%, #152846 100%); }
         [data-theme="dark"] .footer-note, [data-theme="dark"] .legal-shell p { color: #b7cff1; }
+        .headline-bar { align-items: flex-end; }
+        @media (max-width: 640px) {
+            .title { font-size: clamp(1.04rem, 5.3vw, 1.38rem); padding: 0; }
+            .title .title-text { padding: 0.08em 0.1em 0.13em; }
+        }
     </style>
 </head>
 <body data-skip-global-faq>
     <main class="app">
         <div class="headline-bar">
-            <h1>Terms and Conditions</h1>
+            <div class="content page-headline">
+                <a class="title" href="../" aria-label="Go to ProwebTools home"><span class="title-text">ProwebTools</span></a>
+                <h1>Terms and Conditions</h1>
+            </div>
             <div class="tools-group">
                 <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
                     <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
@@ -50,22 +111,27 @@
         </div>
 
         <section class="legal-shell">
-            <p><strong>Effective date:</strong> April 11, 2026</p>
-            <h2>Use of Services</h2>
-            <p>By using ProwebTools, you agree to use the tools lawfully and responsibly. You are responsible for content and files you process through the platform.</p>
-            <h2>No Warranty</h2>
-            <p>Tools are provided "as is" without warranties of uninterrupted availability, fitness for a specific purpose, or error-free operation.</p>
-            <h2>Limitation of Liability</h2>
-            <p>ProwebTools is not liable for data loss, workflow interruption, or indirect damages resulting from use of the site and tools.</p>
+            <p><strong>Effective date:</strong> April 17, 2026</p>
+            <h2>Acceptance of Terms</h2>
+            <p>By accessing or using ProwebTools, you agree to these Terms and Conditions and any applicable laws. If you do not agree, please discontinue use of the website. These terms apply to all visitors using our free online tools for image, video, PDF, and text-related tasks.</p>
+            <h2>Permitted Use</h2>
+            <p>You may use ProwebTools for lawful personal, educational, or business purposes. You are responsible for ensuring that any content or file you process does not violate intellectual property rights, privacy rights, contractual obligations, or local regulations.</p>
+            <h2>User Responsibilities</h2>
+            <p>You agree not to misuse the platform, interfere with website security, attempt unauthorized access, introduce harmful code, or use automated methods that degrade service quality. You are solely responsible for backing up important files before using any conversion, compression, or editing utility.</p>
             <h2>Intellectual Property</h2>
-            <p>Site branding, layout, and original tool implementations are protected content. Third-party marks and services remain property of their owners.</p>
-            <h2>Updates</h2>
-            <p>We may update these terms as features change. Continued use after updates indicates acceptance of revised terms.</p>
+            <p>The ProwebTools brand, site design, written content, and original software components are protected by applicable intellectual property laws. Third-party trademarks, logos, and services referenced on the website remain the property of their respective owners.</p>
+            <h2>Service Availability and Disclaimer</h2>
+            <p>We work to keep tools accurate and available, but services are provided on an "as is" and "as available" basis without warranties of uninterrupted access, complete accuracy, or fitness for a particular purpose. Technical issues, browser limitations, and third-party dependencies may affect outcomes.</p>
+            <h2>Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, ProwebTools and its operators are not liable for indirect, incidental, special, consequential, or data-related damages arising from use of the website or inability to use a tool. Your use of the platform is at your own discretion and risk.</p>
+            <h2>Changes to Services and Terms</h2>
+            <p>We may modify, suspend, or discontinue tools and update these Terms and Conditions at any time. Continued use of the website after updates are posted constitutes acceptance of the revised terms.</p>
+            <h2>Contact</h2>
+            <p>For questions regarding these terms, please contact us through the official feedback page provided on this website.</p>
         </section>
 
         <footer class="site-footer">
             <div class="footer-links">
-                <a href="../">Home</a>
                 <a href="../about-us/">About Us</a>
                 <a href="../privacy-policy/">Privacy Policy</a>
                 <a href="../feedback/">Feedback Form</a>

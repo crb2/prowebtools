@@ -1,5 +1,18 @@
 RewriteEngine On
 
+# Legacy-to-canonical tool route redirects
+RewriteRule ^single-downloader/?$ /youtube-thumbnail-downloader/ [R=301,L,NC]
+RewriteRule ^bulk/?$ /youtube-tags-finder/ [R=301,L,NC]
+RewriteRule ^preview/?$ /youtube-thumbnail-device-preview/ [R=301,L,NC]
+RewriteRule ^convert/?$ /video-to-audio-converter/ [R=301,L,NC]
+RewriteRule ^video/?$ /local-video-player/ [R=301,L,NC]
+RewriteRule ^remove-audio-video/?$ /remove-audio-from-video/ [R=301,L,NC]
+RewriteRule ^avif-to-png/?$ /avif-to-png-converter/ [R=301,L,NC]
+RewriteRule ^compress-image-2mb/?$ /compress-image-to-2mb/ [R=301,L,NC]
+RewriteRule ^image-to-ico/?$ /image-to-ico-converter/ [R=301,L,NC]
+RewriteRule ^speed/?$ /internet-speed-test/ [R=301,L,NC]
+RewriteRule ^ip/?$ /what-is-my-ip-address/ [R=301,L,NC]
+
 # Canonical URL cleanup for all tools:
 # 1) /path/index.html -> /path/
 # 2) /tool-name.html  -> /tool-name/

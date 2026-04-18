@@ -37,8 +37,10 @@
         .content {
             position: relative;
             display: inline-flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             line-height: 1.2;
+            gap: 8px;
         }
 
         .title {
@@ -246,6 +248,23 @@
             gap: 10px;
         }
 
+        .brand-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .brand-links a {
+            text-decoration: none;
+            color: #0e325c;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            border: 1px solid #9fc0e2;
+            border-radius: 999px;
+            padding: 6px 11px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
         .footer-links {
             display: flex;
             flex-wrap: wrap;
@@ -279,7 +298,8 @@
         [data-theme="dark"] .tool-count,
         [data-theme="dark"] .tool-link,
         [data-theme="dark"] .home-empty,
-        [data-theme="dark"] .footer-links a {
+        [data-theme="dark"] .footer-links a,
+        [data-theme="dark"] .brand-links a {
             color: #d9e8ff;
             border-color: #4b6994;
             background: linear-gradient(180deg, #1f3558 0%, #152846 100%);
@@ -440,9 +460,11 @@
 
             // 2. CLEAN HREF GENERATOR: Ensures clicked links don't show .html
             function toHref(file) {
+                if (typeof getToolHref === "function") {
+                    return getToolHref(file, new URL("./", window.location.href));
+                }
                 const normalized = (file || "").toLowerCase();
                 if (normalized === "index.html" || normalized === "") return "./";
-
                 const path = normalized.replace(/\.html$/i, "");
                 return "./" + path + "/";
             }

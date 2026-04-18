@@ -28,7 +28,43 @@ const FORMAT_CACHE_TTL_MS = readPositiveIntEnv("FORMAT_CACHE_TTL_MS", 5 * 60 * 1
 const FORMAT_FETCH_BUDGET_MS = readPositiveIntEnv("FORMAT_FETCH_BUDGET_MS", 60000);
 const FORMAT_FETCH_ATTEMPT_TIMEOUT_MS = readPositiveIntEnv("FORMAT_FETCH_ATTEMPT_TIMEOUT_MS", 12000);
 const ENABLE_BROWSER_COOKIE_STRATEGIES = process.env.ENABLE_BROWSER_COOKIE_STRATEGIES === "1";
+const FEEDBACK_TO = String(process.env.FEEDBACK_TO || "renoiomake103@gmail.com").trim();
 const facebookFormatCache = new Map();
+let feedbackMailerPromise = null;
+
+function escapeHtml(input) {
+    return String(input || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+async function getFeedbackMailer() {
+    if (feedbackMailerPromise) return feedbackMailerPromise;
+
+    feedbackMailerPromise = (async () => {
+        const host = String(process.env.SMTP_HOST || "").trim();
+        const port = Number(process.env.SMTP_PORT || 587);
+        const user = String(process.env.SMTP_USER || "").trim();
+        const pass = String(process.env.SMTP_PASS || "").trim();
+        if (!host || !user || !pass) return null;
+
+        const nodemailerModule = await import("nodemailer");
+        const nodemailer = nodemailerModule?.default || nodemailerModule;
+        const transporter = nodemailer.createTransport({
+            host,
+            port: Number.isFinite(port) && port > 0 ? port : 587,
+            secure: Number(port) === 465,
+            auth: { user, pass }
+        });
+        await transporter.verify();
+        return transporter;
+    })().catch(() => null);
+
+    return feedbackMailerPromise;
+}
 
 function resolveWingetYtDlpPath(namePattern) {
     if (process.platform !== "win32") return "";
@@ -619,6 +655,58 @@ app.get("/api/health", (_req, res) => {
 
 app.get("/", (_req, res) => {
     res.status(200).send("Backend running");
+});
+
+app.post("/api/feedback", async (req, res) => {
+    const name = String(req.body?.name || "").trim();
+    const email = String(req.body?.email || "").trim();
+    const message = String(req.body?.message || "").trim();
+
+    if (!name || !email || !message) {
+        res.status(400).json({ error: "Name, email, and message are required." });
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        res.status(400).json({ error: "Please provide a valid email address." });
+        return;
+    }
+    if (message.length > 6000) {
+        res.status(400).json({ error: "Feedback message is too long." });
+        return;
+    }
+
+    const transporter = await getFeedbackMailer();
+    if (!transporter) {
+        res.status(503).json({ error: "Feedback email service is not configured yet." });
+        return;
+    }
+
+    const escapedName = escapeHtml(name);
+    const escapedEmail = escapeHtml(email);
+    const escapedMessage = escapeHtml(message).replace(/\r?\n/g, "<br>");
+    const submittedAt = new Date().toISOString();
+
+    try {
+        await transporter.sendMail({
+            from: String(process.env.FEEDBACK_FROM || process.env.SMTP_USER || "no-reply@prowebtools.in"),
+            to: FEEDBACK_TO,
+            replyTo: email,
+            subject: `New ProwebTools Feedback from ${name}`,
+            text: `Name: ${name}\nEmail: ${email}\nSubmitted At: ${submittedAt}\n\nMessage:\n${message}`,
+            html: `
+                <h2>New Feedback Submission</h2>
+                <p><strong>Name:</strong> ${escapedName}</p>
+                <p><strong>Email:</strong> ${escapedEmail}</p>
+                <p><strong>Submitted At:</strong> ${escapeHtml(submittedAt)}</p>
+                <p><strong>Message:</strong></p>
+                <p>${escapedMessage}</p>
+            `
+        });
+        res.json({ ok: true });
+    } catch (error) {
+        const detail = String(error?.message || "");
+        res.status(500).json({ error: detail || "Failed to send feedback email." });
+    }
 });
 
 app.post("/api/fetch-video", async (req, res) => {

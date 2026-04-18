@@ -13,12 +13,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - ProwebTools</title>
-    <meta name="description" content="Read the Privacy Policy for ProwebTools and understand how data is handled across tools.">
+    <meta name="description" content="Read the ProwebTools Privacy Policy to understand how data, files, cookies, and analytics are handled across our free online tools.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://prowebtools.in/privacy-policy/">
     <link rel="icon" type="image/svg+xml" href="../favicon-index.svg">
     <link rel="stylesheet" href="../style-win7.css">
     <style>
+        .content {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+            gap: 8px;
+            width: 100%;
+        }
+        .title {
+            margin: 0;
+            background: transparent;
+            display: inline-block;
+            font-size: clamp(1.42rem, 3.1vw, 2.2rem);
+            font-weight: 900;
+            letter-spacing: clamp(-1.75px, -0.25vw, -3.5px);
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 0 0 8px rgba(121, 196, 255, 0.2);
+            position: relative;
+            overflow: visible;
+            border-radius: 0;
+            padding: 0.12em 0.12em 0.16em;
+            isolation: isolate;
+            line-height: 1.22;
+            max-width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .title::after {
+            content: none;
+        }
+
+        .title .title-text {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            display: inline-block;
+            padding: 0.06em 0.08em 0.1em;
+            white-space: nowrap;
+            background: linear-gradient(90deg, #8f73ff 0%, #4aa0ff 12.5%, #25d3ff 25%, #62ffc7 37.5%, #f7ee62 50%, #62ffc7 62.5%, #25d3ff 75%, #4aa0ff 87.5%, #8f73ff 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 0 transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 1px #000000) drop-shadow(0 1px 0 #000000);
+            animation: titleFlow 16s linear infinite;
+        }
+        .page-headline h1 { margin: 0; padding: 0; padding-left: 0.2em; }
+        [data-theme="dark"] .title { background: transparent; }
+        [data-theme="dark"] .title .title-text { -webkit-text-stroke: 0 transparent; text-shadow: none; filter: none; }
+        @keyframes titleFlow { 0% { background-position: 0% 50%; } 100% { background-position: -200% 50%; } }
         .legal-shell { margin-top: 20px; border: 1px solid rgba(118, 164, 214, 0.85); border-radius: 16px; padding: 18px; background: linear-gradient(180deg, var(--glass-1) 0%, var(--glass-2) 100%); }
         .legal-shell p { line-height: 1.6; color: var(--text-soft); }
         .legal-shell h2 { margin-top: 18px; }
@@ -30,12 +83,20 @@
         [data-theme="dark"] .site-footer { border-top-color: #45638b; }
         [data-theme="dark"] .footer-links a { color: #d9e8ff; border-color: #4b6994; background: linear-gradient(180deg, #1f3558 0%, #152846 100%); }
         [data-theme="dark"] .footer-note, [data-theme="dark"] .legal-shell p { color: #b7cff1; }
+        .headline-bar { align-items: flex-end; }
+        @media (max-width: 640px) {
+            .title { font-size: clamp(1.04rem, 5.3vw, 1.38rem); padding: 0; }
+            .title .title-text { padding: 0.08em 0.1em 0.13em; }
+        }
     </style>
 </head>
 <body data-skip-global-faq>
     <main class="app">
         <div class="headline-bar">
-            <h1>Privacy Policy</h1>
+            <div class="content page-headline">
+                <a class="title" href="../" aria-label="Go to ProwebTools home"><span class="title-text">ProwebTools</span></a>
+                <h1>Privacy Policy</h1>
+            </div>
             <div class="tools-group">
                 <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
                     <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
@@ -50,22 +111,25 @@
         </div>
 
         <section class="legal-shell">
-            <p><strong>Effective date:</strong> April 11, 2026</p>
-            <h2>Overview</h2>
-            <p>ProwebTools is designed for practical browser-based utility use. We aim to minimize data collection and keep processing as local as possible.</p>
-            <h2>Data Handling</h2>
-            <p>Most tools process content directly in your browser. When a tool requires network access, the request is limited to performing that specific tool function.</p>
-            <h2>Cookies and Local Storage</h2>
-            <p>We may use local storage for non-sensitive preferences, such as theme settings, to improve usability.</p>
-            <h2>Third-Party Services</h2>
-            <p>Some features may depend on third-party platforms or APIs. Their respective privacy policies apply to those services.</p>
+            <p><strong>Effective date:</strong> April 17, 2026</p>
+            <h2>Scope of This Policy</h2>
+            <p>This Privacy Policy explains how ProwebTools collects, uses, and protects information when you access our free online tools for image, video, PDF, and text processing. We are committed to a privacy-aware experience and we design our platform to minimize unnecessary data collection.</p>
+            <h2>Information We May Collect</h2>
+            <p>When you use ProwebTools, we may collect limited technical information such as browser type, device category, language, approximate location based on IP, and interaction events that help us improve performance. If you voluntarily contact us through a feedback form, we may collect the details you provide, such as name, email address, and message content.</p>
+            <h2>How We Use Information</h2>
+            <p>We use information to operate and secure the website, analyze usage trends, fix errors, prevent abuse, and improve tool quality. We may also use aggregated analytics to understand which pages and keywords bring value to users, so we can improve navigation and SEO discoverability for relevant services.</p>
+            <h2>File Processing and Storage</h2>
+            <p>Many ProwebTools features process files directly in your browser session. For tools that require server-side actions, files are handled only for the requested function and are not retained longer than necessary for processing, security, or legal obligations. We do not sell uploaded file data.</p>
+            <h2>Cookies and Third-Party Services</h2>
+            <p>We may use cookies or local storage for preferences, analytics, and core functionality. We may also use trusted third-party services such as analytics or embedded providers, and those services operate under their own privacy policies and terms.</p>
+            <h2>Your Choices and Rights</h2>
+            <p>You can control cookies through browser settings, avoid submitting personal details in optional forms, and stop using services at any time. Depending on your jurisdiction, you may have rights to access, update, or request deletion of personal data shared with us through direct communication channels.</p>
             <h2>Policy Updates</h2>
-            <p>We may update this policy as tools evolve. Updates will be published on this page with the effective date.</p>
+            <p>We may update this Privacy Policy to reflect legal, technical, or operational changes. Updated versions will be posted on this page with a revised effective date.</p>
         </section>
 
         <footer class="site-footer">
             <div class="footer-links">
-                <a href="../">Home</a>
                 <a href="../about-us/">About Us</a>
                 <a href="../terms-and-conditions/">Terms and Conditions</a>
                 <a href="../feedback/">Feedback Form</a>

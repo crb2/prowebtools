@@ -669,21 +669,32 @@ function renderQualityButtons(formats) {
             hasAudio: Boolean(f?.hasAudio)
         }))
         .filter((f) => f.id && f.height > 0)
-        .sort((a, b) => b.height - a.height);
+        .sort((a, b) => (b.height - a.height) || (b.tbr - a.tbr));
 
-    const unique = [];
-    const seenHeights = new Set();
-    normalized.forEach((fmt) => {
-        if (seenHeights.has(fmt.height)) return;
-        seenHeights.add(fmt.height);
-        unique.push(fmt);
-    });
+    const requestedOrder = [...QUALITY_PRESETS].sort((a, b) => a - b);
+    const pickedIds = new Set();
 
-    unique.forEach((candidate) => {
+    requestedOrder.forEach((presetHeight) => {
+        const exact = normalized
+            .filter((fmt) => fmt.height === presetHeight && !pickedIds.has(fmt.id))
+            .sort((a, b) => (Number(b.hasAudio) - Number(a.hasAudio)) || (b.tbr - a.tbr));
+
+        const near = normalized
+            .filter((fmt) => Math.abs(fmt.height - presetHeight) <= PRESET_TOLERANCE && !pickedIds.has(fmt.id))
+            .sort((a, b) =>
+                (Number(b.hasAudio) - Number(a.hasAudio)) ||
+                (Math.abs(a.height - presetHeight) - Math.abs(b.height - presetHeight)) ||
+                (b.tbr - a.tbr)
+            );
+
+        const candidate = exact[0] || near[0];
+        if (!candidate) return;
+        pickedIds.add(candidate.id);
+
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "download-btn fb-quality-btn";
-        const label = `${candidate.height}p`;
+        const label = `${presetHeight}p`;
         btn.innerHTML = `<span class="fb-q-main"><span class="fb-q-icon" aria-hidden="true">&#x2B07;</span><span class="fb-q-label">${label}</span></span>`;
         btn.title = `${label}`;
         btn.addEventListener("click", () => {
@@ -691,6 +702,25 @@ function renderQualityButtons(formats) {
         });
         fbQualityActions.appendChild(btn);
     });
+
+    if (!fbQualityActions.children.length) {
+        const seenHeights = new Set();
+        normalized.forEach((candidate) => {
+            if (seenHeights.has(candidate.height)) return;
+            seenHeights.add(candidate.height);
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "download-btn fb-quality-btn";
+            const label = `${candidate.height}p`;
+            btn.innerHTML = `<span class="fb-q-main"><span class="fb-q-icon" aria-hidden="true">&#x2B07;</span><span class="fb-q-label">${label}</span></span>`;
+            btn.title = `${label}`;
+            btn.addEventListener("click", () => {
+                downloadByFormat(candidate.id, label, btn);
+            });
+            fbQualityActions.appendChild(btn);
+        });
+    }
 }
 
 if (fbFetchBtn) {

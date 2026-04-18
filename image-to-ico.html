@@ -8,51 +8,381 @@
       gtag('js', new Date());
       gtag('config', 'G-2FYPXXL7J8');
     </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Convert Image to ICO Online Free | Pro Web Tools</title>
-    <meta name="description" content="Convert PNG, JPG, and WebP to ICO instantly. Free online tool for Windows icons, favicons, and app development. Supports sizes from 16x16 to 256x256.">
-    <link rel="canonical" href="https://prowebtools.in/image-to-ico/">
-    <meta name="indexnow-key" content="89e644d1320644f3ade36fad1f1eb1d4">
-
-    <meta property="og:title" content="Image to ICO Converter Online Free | Pro Web Tools">
-    <meta property="og:description" content="Fast, free, and secure online image to ICO converter. No registration required.">
-    <meta property="og:url" content="https://prowebtools.in/image-to-ico/">
+    <title>Image to Icon Converter (ICO) Online Free | Pro Web Tools</title>
+    <meta name="description" content="Convert single or multiple images to ICO with exact output size, editable crop coordinates, transforms, per-item download, and ZIP export.">
+    <link rel="canonical" href="https://prowebtools.in/image-to-ico-converter/">
+    <meta property="og:title" content="Image to Icon Converter Online Free | Pro Web Tools">
+    <meta property="og:description" content="Batch-ready image to ICO converter with crop editor, progress bars, and ZIP export.">
+    <meta property="og:url" content="https://prowebtools.in/image-to-ico-converter/">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://prowebtools.in/og-image.png">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Image to ICO Converter",
-      "url": "https://prowebtools.in/image-to-ico/",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "A free online tool to convert image files into high-quality ICO format for Windows and Web."
-    }
-    </script>
-
     <link rel="icon" type="image/svg+xml" href="favicon-image-to-ico.svg">
     <link rel="stylesheet" href="style-win7.css">
     <style>
     body:not(.dark-mode) .theme-switch { border-color:#9fc0e2; background:linear-gradient(180deg,var(--nav-pill-1) 0%,var(--nav-pill-2) 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(116,158,205,.45), 0 2px 8px rgba(40,89,149,.16); }
     body:not(.dark-mode) .theme-track { background:#6f95c1; box-shadow:inset 0 1px 2px rgba(0,0,0,.2); }
     body:not(.dark-mode) .theme-thumb { background:linear-gradient(180deg,#fff 0%,#e8edf4 100%); }
-    #icoPreview { width:100%; max-height:300px; object-fit:contain; border:1px solid #8fb3d8; border-radius:10px; background:#eaf3ff; }
+
+    .ico-preview-section {
+        margin-top: 14px;
+    }
+
+    .ico-preview-wrap {
+        padding-bottom: 6px;
+    }
+
+    .ico-preview-frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        min-height: 220px;
+        border: 1px solid #86afd8;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #f9fdff 0%, #e7f2ff 100%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 5px 14px rgba(35,90,150,.16);
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    .ico-preview-frame.is-empty {
+        width: min(100%, 380px);
+        height: 220px;
+        min-height: 220px;
+        aspect-ratio: auto;
+        margin: 0 auto;
+    }
+
+    #icoEditorCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        cursor: default;
+        image-rendering: auto;
+    }
+
+    .ico-preview-reset {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        border: 1px solid #89aed6;
+        color: #184b7b;
+        background: linear-gradient(180deg, #ffffff 0%, #e7f2ff 100%);
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 10px rgba(36, 85, 141, 0.2);
+        cursor: pointer;
+        z-index: 3;
+    }
+
+    .ico-preview-reset.hidden {
+        display: none !important;
+    }
+
+    .ico-preview-note {
+        margin: 8px 0 0;
+        font-size: 0.82rem;
+        color: #2f628f;
+        font-weight: 600;
+    }
+
+    .ico-toolbar {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        align-items: center;
+    }
+
+    .ico-toolbar .compact-field {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .ico-toolbar label {
+        margin: 0;
+        font-size: 0.83rem;
+        white-space: nowrap;
+    }
+
+    .ico-toolbar .select-wrap {
+        width: auto;
+    }
+
+    .ico-toolbar select {
+        width: auto;
+        min-width: 0;
+        padding: 9px 34px 9px 11px;
+        font-weight: 700;
+    }
+
+    .ico-toolbar .compact-check {
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 700;
+        color: #1a4a79;
+        white-space: nowrap;
+    }
+
+    .ico-toolbar .compact-check input {
+        width: 17px;
+        height: 17px;
+    }
+
+    .ico-transform-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .ico-transform-row .transform-btn {
+        min-width: 42px;
+        min-height: 42px;
+        padding: 8px 10px;
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+    .ico-coords-grid {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .ico-coords-grid > div {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto;
+    }
+
+    .ico-coords-grid label {
+        margin: 0;
+        font-size: 0.82rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .ico-coords-grid input {
+        width: 88px;
+        min-width: 0;
+        padding: 7px 8px;
+        font-weight: 700;
+    }
+
+    .ico-actions {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .ico-actions button {
+        flex: 0 0 auto;
+    }
+
+    #icoMeta {
+        margin-top: 10px;
+        margin-bottom: 2px;
+        font-size: 0.92rem;
+        font-weight: 800;
+        color: #184b7b;
+    }
+
+    .ico-queue {
+        margin-top: 12px;
+        border: 1px solid #91b4da;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #f9fdff 0%, #eaf4ff 100%);
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+    }
+
+    .ico-queue.empty {
+        padding: 12px;
+        color: #2c608f;
+        font-weight: 700;
+    }
+
+    .ico-item {
+        border: 1px solid #9dbde1;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #ffffff 0%, #edf5ff 100%);
+        padding: 8px 10px;
+        display: grid;
+        gap: 8px;
+    }
+
+    .ico-item.active {
+        border-color: #3e86d0;
+        box-shadow: 0 0 0 2px rgba(62, 134, 208, 0.2);
+    }
+
+    .ico-item-top {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .ico-item-name {
+        margin: 0;
+        font-weight: 800;
+        color: #1d4973;
+        font-size: 0.86rem;
+        word-break: break-word;
+    }
+
+    .ico-item-state {
+        margin: 0;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #326a99;
+    }
+
+    .ico-item-main {
+        display: grid;
+        gap: 7px;
+    }
+
+    .ico-item-progress-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ico-item-thumb {
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        border: 1px solid #92b6dd;
+        background: #fff;
+        object-fit: cover;
+        flex: 0 0 auto;
+    }
+
+    .ico-progress {
+        flex: 1 1 auto;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #cddff4 0%, #aec8e7 100%);
+        overflow: hidden;
+    }
+
+    .ico-progress > span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #59c06f 0%, #1f9a45 100%);
+        transition: width 0.2s linear;
+    }
+
+    .ico-progress-text {
+        margin: 0;
+        min-width: 38px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #2d6799;
+        text-align: right;
+    }
+
+    .ico-item-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .ico-item-actions button {
+        min-height: 33px;
+        padding: 6px 10px;
+        font-size: 0.76rem;
+    }
+
+    .ico-item-actions .hidden {
+        display: none !important;
+    }
+
+    .ico-tip {
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #2f618f;
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .ico-preview-frame,
+    [data-theme="dark"] .ico-queue,
+    [data-theme="dark"] .ico-item {
+        border-color: #4d6f98;
+        background: linear-gradient(180deg, rgba(25, 44, 70, .95) 0%, rgba(15, 30, 49, .95) 100%);
+        box-shadow: inset 0 1px 0 rgba(171, 199, 237, .15), 0 5px 14px rgba(3,10,20,.45);
+    }
+
+    [data-theme="dark"] #icoMeta,
+    [data-theme="dark"] .ico-item-name,
+    [data-theme="dark"] .ico-item-state,
+    [data-theme="dark"] .ico-progress-text,
+    [data-theme="dark"] .ico-tip,
+    [data-theme="dark"] .ico-preview-note,
+    [data-theme="dark"] .ico-toolbar .compact-check {
+        color: #d6e8ff;
+    }
+
+    [data-theme="dark"] .ico-item-thumb,
+    [data-theme="dark"] .ico-preview-reset {
+        border-color: #4d6f98;
+        background: linear-gradient(180deg, #1e3557 0%, #142742 100%);
+        color: #d6e8ff;
+    }
+
+    @media (max-width: 860px) {
+        .ico-coords-grid {
+            gap: 7px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .ico-preview-frame {
+            min-height: 180px;
+        }
+        .ico-preview-frame.is-empty {
+            height: 180px;
+            min-height: 180px;
+        }
+        .ico-toolbar {
+            gap: 7px 8px;
+        }
+        .ico-toolbar select {
+            font-size: 0.92rem;
+            padding: 8px 30px 8px 10px;
+        }
+        .ico-coords-grid input {
+            width: 72px;
+            padding: 6px 7px;
+        }
+    }
     </style>
 </head>
-<body>
+<body data-skip-global-faq>
 <main class="app">
     <div class="headline-bar">
-        <h1>Image to ICO</h1>
+        <h1>Image to Icon Converter</h1>
         <div class="tools-group">
             <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
                 <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
@@ -65,43 +395,125 @@
             </details>
         </div>
     </div>
-    
-    <p class="subtitle">Create a true .ico file from PNG/JPG images.</p>
-    
+
+    <p class="subtitle">Drop one or multiple images, edit crop, and export icons with per-item download or ZIP bundle.</p>
+
     <section class="card">
-        <input id="icoFile" class="sr-only-input" type="file" accept="image/*">
-        <div id="icoDrop" class="drop-zone" role="button" tabindex="0">
-            <p class="drop-title">Drag and drop image here</p>
-            <p class="drop-subtitle">or click to choose file</p>
+        <input id="icoFile" class="sr-only-input" type="file" accept="image/*" multiple>
+        <div id="icoDrop" class="drop-zone" role="button" tabindex="0" aria-label="Upload image files for icon conversion">
+            <p class="drop-title">Drag and drop one or multiple images here</p>
+            <p class="drop-subtitle">or click to choose files</p>
         </div>
-        
-        <div class="convert-grid fixed-two-col" style="margin-top:12px;">
+
+        <div class="ico-preview-section">
+            <div class="ico-preview-wrap">
+                <div id="icoPreviewFrame" class="ico-preview-frame">
+                    <canvas id="icoEditorCanvas" width="640" height="360" aria-label="Icon preview editor"></canvas>
+                    <button id="icoPreviewReset" type="button" class="ico-preview-reset hidden" title="Reset converted preview" aria-label="Reset converted preview">&#8635;</button>
+                </div>
+            </div>
+            <p class="ico-preview-note">Preview updates live. Drag inside crop to move. Drag corners/edges to resize in free form mode.</p>
+        </div>
+
+        <div class="ico-toolbar">
+            <div class="compact-field">
+                <label for="icoSize">Size</label>
+                <div class="select-wrap">
+                    <select id="icoSize">
+                        <option value="16">16x16</option>
+                        <option value="24">24x24</option>
+                        <option value="32">32x32</option>
+                        <option value="48">48x48</option>
+                        <option value="64">64x64</option>
+                        <option value="96">96x96</option>
+                        <option value="128">128x128</option>
+                        <option value="256" selected>256x256</option>
+                        <option value="512">512x512</option>
+                    </select>
+                </div>
+            </div>
+            <div class="compact-field">
+                <label for="icoCropMode">Crop</label>
+                <div class="select-wrap">
+                    <select id="icoCropMode">
+                        <option value="square" selected>Square</option>
+                        <option value="original">Original Ratio</option>
+                        <option value="free">Free Form</option>
+                    </select>
+                </div>
+            </div>
+            <label class="compact-check" for="icoStretch">
+                <input id="icoStretch" type="checkbox">
+                Stretch to fit
+            </label>
+            <label class="compact-check" for="icoShowGrid">
+                <input id="icoShowGrid" type="checkbox">
+                Show grid
+            </label>
+            <div class="ico-transform-row">
+                <button id="icoRotateLeft" class="transform-btn" type="button" title="Rotate left">&#8634;</button>
+                <button id="icoRotateRight" class="transform-btn" type="button" title="Rotate right">&#8635;</button>
+                <button id="icoFlipH" class="transform-btn" type="button" title="Flip horizontal">&#8646;</button>
+                <button id="icoFlipV" class="transform-btn" type="button" title="Flip vertical">&#8645;</button>
+            </div>
+        </div>
+
+        <div class="ico-coords-grid">
             <div>
-                <label for="icoSize">Icon Size</label>
-                <select id="icoSize">
-                    <option value="16">16x16</option>
-                    <option value="32">32x32</option>
-                    <option value="48">48x48</option>
-                    <option value="64">64x64</option>
-                    <option value="128">128x128</option>
-                    <option value="256" selected>256x256</option>
-                </select>
+                <label for="icoLeft">Left</label>
+                <input id="icoLeft" type="number" min="0" step="1">
             </div>
             <div>
-                <p id="icoMeta" class="note" style="margin-top:28px;"></p>
+                <label for="icoTop">Top</label>
+                <input id="icoTop" type="number" min="0" step="1">
+            </div>
+            <div>
+                <label for="icoWidth">Width</label>
+                <input id="icoWidth" type="number" min="1" step="1">
+            </div>
+            <div>
+                <label for="icoHeight">Height</label>
+                <input id="icoHeight" type="number" min="1" step="1">
             </div>
         </div>
-        
-        <div id="icoPreviewWrap" class="audio-preview hidden" style="margin-top:12px;">
-            <img id="icoPreview" alt="ICO source preview">
+
+        <div class="ico-actions">
+            <button id="icoRunBtn" type="button">Convert Selected</button>
+            <button id="icoRunAllBtn" type="button">Convert All</button>
+            <button id="icoZipBtn" type="button" class="download-btn">Download All as ZIP</button>
         </div>
-        
-        <div class="convert-actions" style="margin-top:12px;">
-            <button id="icoRunBtn" type="button">Convert to ICO</button>
-            <button id="icoDownloadBtn" type="button" class="download-btn hidden">Download ICO</button>
+
+        <p id="icoMeta" class="note hidden"></p>
+        <p id="icoStatus" class="status" aria-live="polite">Load image files to start.</p>
+        <p class="ico-tip">One by one download is available in each queue item after conversion.</p>
+
+        <div id="icoQueue" class="ico-queue empty" aria-live="polite">No images loaded yet.</div>
+    </section>
+
+    <section class="faq-section">
+        <h2>Image to Icon Converter FAQ</h2>
+        <div class="faq-list">
+            <details class="faq-item"><summary>How do I convert image to icon online for free?</summary><p>Upload one or multiple images, set size and crop, then convert and download.</p></details>
+            <details class="faq-item"><summary>Can I convert PNG to ICO directly?</summary><p>Yes, PNG images are supported and converted directly to ICO format.</p></details>
+            <details class="faq-item"><summary>Can I convert JPG or JPEG to ICO?</summary><p>Yes, JPG and JPEG files are supported.</p></details>
+            <details class="faq-item"><summary>Can I convert multiple images to ICO at once?</summary><p>Yes, drag and drop multiple files, then use Convert All.</p></details>
+            <details class="faq-item"><summary>Is ZIP download recommended for batch exports?</summary><p>Yes, use Download All as ZIP for multi-image output.</p></details>
+            <details class="faq-item"><summary>Can I download icons one by one?</summary><p>Yes, each item has its own Download button after conversion.</p></details>
+            <details class="faq-item"><summary>Which icon sizes are available?</summary><p>16, 24, 32, 48, 64, 96, 128, 256, and 512 are supported.</p></details>
+            <details class="faq-item"><summary>Does 16x16 favicon export work?</summary><p>Yes, select 16x16 and convert.</p></details>
+            <details class="faq-item"><summary>Can I create 512x512 icon?</summary><p>Yes, 512x512 is available in Size options.</p></details>
+            <details class="faq-item"><summary>How do crop coordinates work?</summary><p>Edit Left, Top, Width, and Height to control exact crop region.</p></details>
+            <details class="faq-item"><summary>Can I move crop area using mouse or touch?</summary><p>Yes, drag inside the crop region to move it.</p></details>
+            <details class="faq-item"><summary>How do I do free-form cropping?</summary><p>Select Free Form and drag crop edges/corners or edit width and height values.</p></details>
+            <details class="faq-item"><summary>What is Original Ratio mode?</summary><p>It keeps crop ratio matching the source image ratio.</p></details>
+            <details class="faq-item"><summary>What does Stretch to fit do?</summary><p>It stretches output to fill selected icon size exactly.</p></details>
+            <details class="faq-item"><summary>Can I flip and rotate before export?</summary><p>Yes, rotate left/right and flip horizontal/vertical are available.</p></details>
+            <details class="faq-item"><summary>Why is there a progress bar per item?</summary><p>It shows conversion status for each file in the queue.</p></details>
+            <details class="faq-item"><summary>Does preview show converted result?</summary><p>Yes, preview updates using current settings and converted output behavior.</p></details>
+            <details class="faq-item"><summary>Is this tool mobile friendly?</summary><p>Yes, controls and dropdowns are optimized for mobile use.</p></details>
+            <details class="faq-item"><summary>Are my files uploaded to server?</summary><p>This converter processes files in browser for privacy-friendly usage.</p></details>
+            <details class="faq-item"><summary>Can I use this for app and favicon development?</summary><p>Yes, it is suitable for website favicons and app icon preparation.</p></details>
         </div>
-        
-        <p id="icoStatus" class="status" aria-live="polite">Load an image to start.</p>
     </section>
 </main>
 

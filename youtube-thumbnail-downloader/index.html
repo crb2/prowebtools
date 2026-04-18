@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2FYPXXL7J8');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Thumbnail Downloader Online Free | Pro Web Tools</title>
+    <meta name="description" content="Download YouTube thumbnail previews in multiple resolutions with a fast, glossy and responsive tool.">
+    <link rel="icon" type="image/svg+xml" href="../favicon-single-downloader.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        /* Keep theme toggle aligned with light-mode palette */
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>YouTube Thumbnail Downloader</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+        <p class="subtitle">Paste a YouTube link to auto-fetch one main preview and download in any quality.</p>
+
+        <form id="thumbnailForm" class="card">
+            <label for="youtubeUrl">YouTube URL</label>
+            <div class="input-row">
+                <input
+                    id="youtubeUrl"
+                    type="url"
+                    placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit">Get Thumbnail</button>
+            </div>
+            <p id="status" class="status" aria-live="polite"></p>
+        </form>
+
+        <section id="result" class="result hidden">
+            <h2>Main Preview</h2>
+            <div class="single-preview-wrap">
+                <img id="singlePreview" class="single-preview" alt="Main thumbnail preview">
+            </div>
+            <p id="singlePreviewSize" class="single-preview-size"></p>
+            <div id="qualityActions" class="quality-actions"></div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../script.js"></script>
+</body>
+</html>
+
+

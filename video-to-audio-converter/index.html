@@ -1,0 +1,258 @@
+﻿﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2FYPXXL7J8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2FYPXXL7J8');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Video to Audio Online Free | Pro Web Tools</title>
+    <meta name="description" content="Convert video to audio online for free in your browser. Upload video files up to 2 GB and download extracted audio quickly.">
+    <meta name="keywords" content="convert video to audio online, video to audio converter, extract audio from video, free audio converter">
+    <link rel="icon" type="image/svg+xml" href="../favicon-convert.svg">
+    <link rel="stylesheet" href="../style-win7.css">
+    <style>
+        /* Keep theme toggle aligned with light-mode palette */
+        body:not(.dark-mode) .theme-switch {
+            border-color: #9fc0e2;
+            background: linear-gradient(180deg, var(--nav-pill-1) 0%, var(--nav-pill-2) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(116, 158, 205, 0.45),
+                0 2px 8px rgba(40, 89, 149, 0.16);
+        }
+        body:not(.dark-mode) .theme-track {
+            background: #6f95c1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        body:not(.dark-mode) .theme-thumb {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf4 100%);
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I convert video to audio online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Upload your video file, click convert, and download the extracted audio file from your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What upload size is recommended?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Recommended upload size is under 2 GB on this page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this video to audio converter free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, this converter is free and runs in your browser without account signup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do my files leave my device?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No server upload is required by this tool. Processing happens locally in your browser."
+          }
+        }
+      ]
+    }
+    </script>
+</head>
+<body>
+    <main class="app">
+        <div class="headline-bar">
+            <h1>Convert Video to Audio Online</h1>
+            <div class="tools-group">
+                <button type="button" class="theme-switch" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon sun" aria-hidden="true">&#9728;</span>
+                    <span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>
+                    <span class="theme-icon moon" aria-hidden="true">&#127769;</span>
+                </button>
+                <details class="tools-menu">
+                    <summary class="tools-menu-trigger">All Tools</summary>
+                    <div class="tools-menu-panel"></div>
+                </details>
+            </div>
+        </div>
+        <p class="subtitle">Upload your video and extract audio in a glossy one-click workflow. Works directly in your browser.</p>
+
+        <form id="convertForm" class="card">
+            <div class="convert-grid">
+                <div>
+                    <label for="videoFile" style="display:none;">Upload Video File</label>
+                    <input id="videoFile" class="sr-only-input" type="file" accept="video/*">
+                    <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Upload video file by click or drag and drop">
+                        <p class="drop-title">Drag and drop video here</p>
+                        <p class="drop-subtitle">or click to choose file</p>
+                    </div>
+                    <div class="url-load-row">
+                        <input id="videoUrl" type="url" placeholder="Or paste direct video URL (https://...)" inputmode="url" autocomplete="off">
+                    </div>
+                    <p class="url-note"></p>
+                    <p id="backendStatusNote" class="url-note hidden"></p>
+                </div>
+                <div>
+                    <label for="audioFormat">Audio Format</label>
+                    <div class="select-wrap custom-format-select">
+                        <select id="audioFormat" class="custom-format-native" aria-hidden="true" tabindex="-1">
+                            <option value="mp3" selected>MP3 (most used audio format)</option>
+                            <option value="wav">WAV (Uncompress audio)</option>
+                            <option value="aac">AAC (High quality audio, small file)</option>
+                            <option value="flac">FLAC (Lossless compression)</option>
+                            <option value="ogg">OGG (Open source format)</option>
+                        </select>
+                        <button id="audioFormatTrigger" type="button" class="custom-format-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            MP3 (most used audio format)
+                        </button>
+                        <div id="audioFormatMenu" class="custom-format-menu hidden" role="listbox">
+                            <button type="button" class="custom-format-option is-active" data-value="mp3" role="option" aria-selected="true">MP3 (most used audio format)</button>
+                            <button type="button" class="custom-format-option" data-value="wav" role="option" aria-selected="false">WAV (Uncompress audio)</button>
+                            <button type="button" class="custom-format-option" data-value="aac" role="option" aria-selected="false">AAC (High quality audio, small file)</button>
+                            <button type="button" class="custom-format-option" data-value="flac" role="option" aria-selected="false">FLAC (Lossless compression)</button>
+                            <button type="button" class="custom-format-option" data-value="ogg" role="option" aria-selected="false">OGG (Open source format)</button>
+                        </div>
+                        <div id="audioFormatBackdrop" class="tool-modal-backdrop hidden" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div class="full-row">
+                    <label for="fileStats">File Details</label>
+                    <div class="file-stats-wrap">
+                        <textarea id="fileStats" class="file-stats-box" rows="3" readonly placeholder="No file selected"></textarea>
+                        <p id="fileDetailsMeta" class="file-details-meta">Size: -- | Duration: --</p>
+                    </div>
+                    <p id="fileNameHint" class="url-note hidden"></p>
+                </div>
+            </div>
+            <details class="time-range-details">
+                <summary class="time-range-summary">Set Start/End Time (Optional)</summary>
+                <div class="time-range-box">
+                    <div class="convert-grid time-range-grid">
+                        <div>
+                            <label id="startTimeLabel" for="startTime">Start Time (MM:SS)</label>
+                            <input id="startTime" class="time-plain-input" type="text" value="00:00" placeholder="00:00" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+                        </div>
+                        <div>
+                            <label id="endTimeLabel" for="endTime">End Time (MM:SS)</label>
+                            <input id="endTime" class="time-plain-input" type="text" value="00:00" placeholder="00:00" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <div class="output-name-row">
+                <label for="outputBaseName">Rename Video</label>
+                <div class="output-name-controls">
+                    <input id="outputBaseName" type="text" value="audio_output" autocomplete="off">
+                    <span id="outputExt" class="output-ext">.mp3</span>
+                </div>
+            </div>
+            <div id="convertInfo" class="convert-info">Choose a video and click convert.</div>
+            <div id="previewWrap" class="audio-preview hidden">
+                <div class="preview-head">
+                    <div class="preview-title-wrap">
+                        <p class="preview-title">Preview Trimmed Audio</p>
+                        <span id="previewMeta" class="preview-meta hidden">0.0 MB - 0 kb/s</span>
+                    </div>
+                    <span class="preview-pill">Listen Before Export</span>
+                </div>
+                <audio id="audioPreview" class="preview-audio" preload="metadata"></audio>
+                <div class="preview-controls">
+                    <button id="previewPlayBtn" type="button" class="preview-btn" aria-label="Play preview">Play</button>
+                    <input id="previewSeek" class="preview-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Seek preview">
+                    <span id="previewTime" class="preview-time">0:00 / 0:00</span>
+                    <div id="previewVolumeWrap" class="preview-volume-wrap">
+                        <button id="previewVolumeBtn" type="button" class="preview-btn preview-volume-btn" aria-label="Volume">Vol</button>
+                        <div id="previewVolumePanel" class="preview-volume-panel">
+                            <label class="preview-slider-label" for="previewVolume">Volume</label>
+                            <input id="previewVolume" class="preview-volume" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume slider">
+                            <label class="preview-slider-label" for="previewBass">Bass Boost</label>
+                            <input id="previewBass" class="preview-bass" type="range" min="0" max="100" step="1" value="0" aria-label="Bass boost slider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="convert-actions">
+                <button id="convertBtn" type="submit">Convert to Audio</button>
+                <button id="downloadBtn" type="button" class="download-btn" disabled>Download Audio</button>
+                <button id="downloadBassBtn" type="button" class="download-btn" disabled>Download Bass Boosted</button>
+            </div>
+            <p id="convertStatus" class="status" aria-live="polite"></p>
+            <p class="note">Note: Recommended upload size is under 2 GB. Very large video files may fail on low-memory devices.</p>
+        </form>
+
+        <section class="faq-section">
+            <h2>FAQ - Video to Audio Converter</h2>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>How do I use this converter step by step?</summary>
+                    <p>1) Upload a file or paste a video link. 2) Choose output format. 3) Optionally set Start and End time. 4) Click Convert to Audio. 5) Preview before export. 6) Download Audio or Download Bass Boosted.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What features are included in this tool?</summary>
+                    <p>Features include drag-and-drop upload, video-link import, MP3/WAV/AAC/FLAC/OGG output, optional trim by time range, live audio preview, playback controls, volume and bass boost panel, normal download, and bass-boosted download.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What audio formats are supported?</summary>
+                    <p>You can convert to MP3 (default), WAV, AAC (M4A), FLAC, and OGG. Extension changes automatically based on selected format.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How does trimming work?</summary>
+                    <p>Open Set Start/End Time (Optional) and enter time. Under 60 minutes it uses MM:SS. At 1 hour or more it switches to HH:MM:SS automatically. Examples: 2 means 02:00, 2:2 means 02:20, 5:2:3 means 05:20:30, 50203 means 05:02:03, and 004010 means 00:40:10. If both are 00:00 or 00:00:00, full duration is used.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How does mobile number typing work for time?</summary>
+                    <p>In mobile, compact typing is supported. Example: 0022 becomes 00:22, 1256 becomes 12:56, and 2 becomes 02:00 automatically.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How do preview, volume, and bass boost work?</summary>
+                    <p>After conversion, use Play to preview trimmed audio. Click Vol to show or hide both sliders. Volume controls playback loudness. Bass Boost increases low frequencies and is also used by Download Bass Boosted.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What is Download Bass Boosted?</summary>
+                    <p>This creates a new exported audio file using your current Bass Boost slider setting. The boosted export is downloaded as WAV for stable processing quality.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Are keyboard shortcuts supported in preview?</summary>
+                    <p>Yes. Space plays or pauses, M toggles mute, Arrow Up increases volume, and Arrow Down decreases volume.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What are limits and common errors?</summary>
+                    <p>Recommended upload size is under 2 GB. Very large files can fail on low-memory devices. If a link fails, upload the file directly or retry with another network.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Useful tips for best output quality</summary>
+                    <p>Use MP3 for compatibility, AAC for smaller high-quality files, and FLAC/WAV for editing. Keep trim start and end close to needed audio to reduce file size. Use headphones while previewing and keep Bass Boost under 85% for cleaner sound.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Is this tool free?</summary>
+                    <p>Yes. The converter is free to use.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <script src="../tools-menu.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../vendor/ffmpeg/ffmpeg.js"></script>
+    <script src="../convert.js"></script>
+</body>
+</html>
+

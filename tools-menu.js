@@ -8,27 +8,27 @@
         "file":  "single-downloader.html"
     },
     {
-        "label":  "Tags Finder",
+        "label":  "YouTube Tags Finder",
         "file":  "bulk.html"
     },
     {
-        "label":  "YouTube Thumbnail Preview",
+        "label":  "YouTube Thumbnail Device Preview",
         "file":  "preview.html"
     },
     {
-        "label":  "Video to Audio",
+        "label":  "Video to Audio Converter",
         "file":  "convert.html"
     },
     {
-        "label":  "What Is My IP",
+        "label":  "What Is My IP Address",
         "file":  "ip.html"
     },
     {
-        "label":  "Speed Check",
+        "label":  "Internet Speed Test",
         "file":  "speed.html"
     },
     {
-        "label":  "Video Player",
+        "label":  "Local Video Player",
         "file":  "video.html"
     },
     {
@@ -52,7 +52,7 @@
         "file":  "media-speed-changer.html"
     },
     {
-        "label":  "Image to ICO",
+        "label":  "Image to ICO Converter",
         "file":  "image-to-ico.html"
     },
     {
@@ -72,7 +72,7 @@
         "file":  "merge-pdf.html"
     },
     {
-        "label":  "Download Facebook Video",
+        "label":  "Facebook Video Downloader",
         "file":  "facebook-video-downloader.html"
     },
     {
@@ -170,7 +170,7 @@ const TOOL_FOOTER_GROUPS = [
     {
         key: "utility",
         title: "Utility and Calculators",
-        test: (label) => /(calculator|ip|speed check|uuid|password)/i.test(label)
+        test: (label) => /(calculator|ip|internet speed test|uuid|password)/i.test(label)
     },
     {
         key: "more",
@@ -180,6 +180,32 @@ const TOOL_FOOTER_GROUPS = [
 ];
 
 const LANGUAGE_STORAGE_KEY = "pwt-language";
+const TOOL_ROUTE_OVERRIDES = Object.freeze({
+    "single-downloader.html": "youtube-thumbnail-downloader",
+    "bulk.html": "youtube-tags-finder",
+    "preview.html": "youtube-thumbnail-device-preview",
+    "convert.html": "video-to-audio-converter",
+    "video.html": "local-video-player",
+    "remove-audio-video.html": "remove-audio-from-video",
+    "avif-to-png.html": "avif-to-png-converter",
+    "compress-image-2mb.html": "compress-image-to-2mb",
+    "image-to-ico.html": "image-to-ico-converter",
+    "speed.html": "internet-speed-test",
+    "ip.html": "what-is-my-ip-address"
+});
+const LEGACY_ROUTE_ALIASES = Object.freeze({
+    "single-downloader": "youtube-thumbnail-downloader",
+    "bulk": "youtube-tags-finder",
+    "preview": "youtube-thumbnail-device-preview",
+    "convert": "video-to-audio-converter",
+    "video": "local-video-player",
+    "remove-audio-video": "remove-audio-from-video",
+    "avif-to-png": "avif-to-png-converter",
+    "compress-image-2mb": "compress-image-to-2mb",
+    "image-to-ico": "image-to-ico-converter",
+    "speed": "internet-speed-test",
+    "ip": "what-is-my-ip-address"
+});
 const TRANSLATION_CACHE_KEY = "pwt-translation-cache-v2";
 const DEFAULT_LANGUAGE = "en";
 const LANGUAGE_CODES = [
@@ -897,7 +923,7 @@ function buildBrandLink() {
     const current = getCurrentToolFile();
     const isHomePage = current === "index.html";
     document.body?.classList.toggle("home-page", isHomePage);
-    if (isHomePage && header.querySelector(".content .title")) {
+    if (header.querySelector(".content .title")) {
         return;
     }
 
@@ -1166,6 +1192,7 @@ function buildToolsFooter() {
         <a href="${new URL("./about-us/", baseUrl).href}">About Us</a>
         <a href="${new URL("./privacy-policy/", baseUrl).href}">Privacy Policy</a>
         <a href="${new URL("./terms-and-conditions/", baseUrl).href}">Terms and Conditions</a>
+        <a href="${new URL("./feedback/", baseUrl).href}">Feedback Form</a>
     `;
 
     content.appendChild(grid);
@@ -1195,41 +1222,129 @@ function getToolHref(file, baseUrl) {
     if (normalized === "index.html") {
         return new URL("./", baseUrl).href;
     }
-    const slug = normalized.replace(/\.html$/i, "");
+    const slug = getCanonicalToolSlug(normalized);
     return new URL(`./${slug}/`, baseUrl).href;
+}
+
+function getCanonicalToolSlug(file) {
+    const normalized = String(file || "").toLowerCase();
+    const ensuredFile = normalized.endsWith(".html") ? normalized : `${normalized}.html`;
+    return TOOL_ROUTE_OVERRIDES[ensuredFile] || ensuredFile.replace(/\.html$/i, "");
+}
+
+function resolveToolFileFromSlug(slug) {
+    const normalized = String(slug || "").toLowerCase().replace(/\/+$/g, "");
+    if (!normalized) return "";
+
+    const canonicalSlug = LEGACY_ROUTE_ALIASES[normalized] || normalized;
+    for (const tool of TOOL_LINKS) {
+        const file = String(tool.file || "").toLowerCase();
+        if (!file || file === "index.html") continue;
+        const directSlug = file.replace(/\.html$/i, "");
+        const mappedSlug = getCanonicalToolSlug(file);
+        if (canonicalSlug === mappedSlug || canonicalSlug === directSlug) {
+            return file;
+        }
+    }
+    return "";
 }
 
 function normalizeCleanUrl() {
     const { pathname, search, hash } = window.location;
-    if (!/\/index\.html$/i.test(pathname)) return;
-    const cleanPath = pathname.replace(/index\.html$/i, "");
-    history.replaceState({}, "", `${cleanPath}${search}${hash}`);
+    let cleanPath = pathname;
+
+    if (/\/index\.html$/i.test(cleanPath)) {
+        cleanPath = cleanPath.replace(/index\.html$/i, "");
+    }
+
+    const parts = cleanPath.split("/").filter(Boolean);
+    if (parts.length) {
+        const last = parts[parts.length - 1].toLowerCase();
+        const resolved = resolveToolFileFromSlug(last);
+        if (resolved) {
+            const canonicalSlug = getCanonicalToolSlug(resolved);
+            if (last !== canonicalSlug) {
+                parts[parts.length - 1] = canonicalSlug;
+                cleanPath = `/${parts.join("/")}/`;
+            }
+        }
+    }
+
+    if (cleanPath !== pathname) {
+        history.replaceState({}, "", `${cleanPath}${search}${hash}`);
+    }
+}
+
+function selectionIntersectsTarget(target) {
+    if (!(target instanceof Node) || typeof window.getSelection !== "function") return false;
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || selection.rangeCount === 0) return false;
+    if (!String(selection.toString() || "").trim()) return false;
+
+    for (let index = 0; index < selection.rangeCount; index += 1) {
+        try {
+            if (selection.getRangeAt(index).intersectsNode(target)) {
+                return true;
+            }
+        } catch (_) {
+            // Ignore browsers that reject intersectsNode for detached nodes.
+        }
+    }
+    return false;
+}
+
+function preventClicksAfterTextSelection() {
+    if (document.documentElement.dataset.selectionClickGuardReady === "true") return;
+    document.documentElement.dataset.selectionClickGuardReady = "true";
+
+    document.addEventListener("click", (event) => {
+        if (event.defaultPrevented || event.detail === 0) return;
+
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+
+        const element = target instanceof Element ? target : target.parentElement;
+        if (!element) return;
+        if (element.closest("input, textarea, select, option, [contenteditable], .tools-menu-panel, .language-menu-panel")) {
+            return;
+        }
+        if (!selectionIntersectsTarget(target)) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+    }, true);
 }
 
 function getCurrentToolFile() {
     const parts = location.pathname.split("/").filter(Boolean);
     if (parts.length === 0) return "index.html";
     const last = (parts[parts.length - 1] || "").toLowerCase();
-    if (last === "single-downloader") return "single-downloader.html";
+
     if (last === "index.html" && parts.length >= 2) {
         const parent = parts[parts.length - 2].toLowerCase();
-        const knownSlugs = new Set(
-            TOOL_LINKS.map((tool) => (tool.file || "").toLowerCase().replace(/\.html$/, ""))
-        );
-        if (knownSlugs.has(parent)) return `${parent}.html`;
+        const resolvedParent = resolveToolFileFromSlug(parent);
+        if (resolvedParent) return resolvedParent;
         return "index.html";
     }
-    if (last.endsWith(".html")) return last;
-    const knownSlugs = new Set(
-        TOOL_LINKS.map((tool) => (tool.file || "").toLowerCase().replace(/\.html$/, ""))
-    );
-    if (knownSlugs.has(last)) return `${last}.html`;
+
+    if (last.endsWith(".html")) {
+        const direct = TOOL_LINKS.find((tool) => (tool.file || "").toLowerCase() === last);
+        if (direct) return last;
+        const resolvedFromHtml = resolveToolFileFromSlug(last.replace(/\.html$/i, ""));
+        if (resolvedFromHtml) return resolvedFromHtml;
+        return "index.html";
+    }
+
+    const resolved = resolveToolFileFromSlug(last);
+    if (resolved) return resolved;
     return "index.html";
 }
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         normalizeCleanUrl();
+        preventClicksAfterTextSelection();
         removeHeaderToolsMenu();
         buildBrandLink();
         ensureLanguageSelector();
@@ -1242,6 +1357,7 @@ if (document.readyState === 'loading') {
     });
 } else {
     normalizeCleanUrl();
+    preventClicksAfterTextSelection();
     removeHeaderToolsMenu();
     buildBrandLink();
     ensureLanguageSelector();
